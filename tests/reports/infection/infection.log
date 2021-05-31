@@ -1,0 +1,538 @@
+Escaped mutants:
+================
+
+1) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:34    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+     private function getRealTaxValue(float $tax) : float
+     {
+         $increment = self::DEFAULT_INCREMENT_VALUE;
+-        if ($tax > 5) {
++        if ($tax >= 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+         return 1 + ($increment + $tax) / 100;
+
+
+2) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 0 + ($increment + $tax) / 100;
+     }
+     /**
+      * @param float $amount
+
+
+3) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 2 + ($increment + $tax) / 100;
+     }
+     /**
+      * @param float $amount
+
+
+4) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] Plus
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 1 + ($increment - $tax) / 100;
+     }
+     /**
+      * @param float $amount
+
+
+5) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 1 + ($increment + $tax) / 99;
+     }
+     /**
+      * @param float $amount
+
+
+6) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 1 + ($increment + $tax) / 101;
+     }
+     /**
+      * @param float $amount
+
+
+7) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] Division
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 1 + ($increment + $tax) * 100;
+     }
+     /**
+      * @param float $amount
+
+
+8) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:37    [M] Plus
+
+--- Original
++++ New
+@@ @@
+         if ($tax > 5) {
+             $increment = $this->client->getIncrementValue($tax);
+         }
+-        return 1 + ($increment + $tax) / 100;
++        return 1 - ($increment + $tax) / 100;
+     }
+     /**
+      * @param float $amount
+
+
+9) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TaxCalculator.php:47    [M] Multiplication
+
+--- Original
++++ New
+@@ @@
+      */
+     public function calculate(float $amount, float $tax) : float
+     {
+-        return $amount * $this->getRealTaxValue($tax);
++        return $amount / $this->getRealTaxValue($tax);
+     }
+ }
+
+
+Timed Out mutants:
+==================
+
+Skipped mutants:
+================
+
+Not Covered mutants:
+====================
+
+1) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:59    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return string
+      */
+-    public function getId() : string
++    protected function getId() : string
+     {
+         return $this->id;
+     }
+
+
+2) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:67    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param string $id
+      */
+-    public function setId(string $id) : void
++    protected function setId(string $id) : void
+     {
+         $this->id = $id;
+     }
+
+
+3) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:75    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return float
+      */
+-    public function getInitialAmount() : float
++    protected function getInitialAmount() : float
+     {
+         return $this->initialAmount;
+     }
+
+
+4) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:83    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param float $initialAmount
+      */
+-    public function setInitialAmount(float $initialAmount) : void
++    protected function setInitialAmount(float $initialAmount) : void
+     {
+         $this->initialAmount = $initialAmount;
+     }
+
+
+5) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:91    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return float
+      */
+-    public function getSellerTax() : float
++    protected function getSellerTax() : float
+     {
+         return $this->sellerTax;
+     }
+
+
+6) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:99    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param float $sellerTax
+      */
+-    public function setSellerTax(float $sellerTax) : void
++    protected function setSellerTax(float $sellerTax) : void
+     {
+         $this->sellerTax = $sellerTax;
+     }
+
+
+7) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:107    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return float
+      */
+-    public function getSlytherinPayTax() : float
++    protected function getSlytherinPayTax() : float
+     {
+         return $this->slytherinPayTax;
+     }
+
+
+8) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:115    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param float $slytherinPayTax
+      */
+-    public function setSlytherinPayTax(float $slytherinPayTax) : void
++    protected function setSlytherinPayTax(float $slytherinPayTax) : void
+     {
+         $this->slytherinPayTax = $slytherinPayTax;
+     }
+
+
+9) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:123    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return float
+      */
+-    public function getTotalTax() : float
++    protected function getTotalTax() : float
+     {
+         return $this->totalTax;
+     }
+
+
+10) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:131    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param float $totalTax
+      */
+-    public function setTotalTax(float $totalTax) : void
++    protected function setTotalTax(float $totalTax) : void
+     {
+         $this->totalTax = $totalTax;
+     }
+
+
+11) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:139    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return float
+      */
+-    public function getTotalAmount() : float
++    protected function getTotalAmount() : float
+     {
+         return $this->totalAmount;
+     }
+
+
+12) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:147    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param float $totalAmount
+      */
+-    public function setTotalAmount(float $totalAmount) : void
++    protected function setTotalAmount(float $totalAmount) : void
+     {
+         $this->totalAmount = $totalAmount;
+     }
+
+
+13) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:155    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return DateTime
+      */
+-    public function getCreatedDate() : DateTime
++    protected function getCreatedDate() : DateTime
+     {
+         return $this->createdDate;
+     }
+
+
+14) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:163    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param DateTime $createdDate
+      */
+-    public function setCreatedDate(DateTime $createdDate) : void
++    protected function setCreatedDate(DateTime $createdDate) : void
+     {
+         $this->createdDate = $createdDate;
+     }
+
+
+15) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:171    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return Seller
+      */
+-    public function getSeller() : Seller
++    protected function getSeller() : Seller
+     {
+         return $this->seller;
+     }
+
+
+16) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:179    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param Seller $seller
+      */
+-    public function setSeller(Seller $seller) : void
++    protected function setSeller(Seller $seller) : void
+     {
+         $this->seller = $seller;
+     }
+
+
+17) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:187    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return Buyer
+      */
+-    public function getBuyer() : Buyer
++    protected function getBuyer() : Buyer
+     {
+         return $this->buyer;
+     }
+
+
+18) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Entities/Transaction.php:195    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @param Buyer $buyer
+      */
+-    public function setBuyer(Buyer $buyer) : void
++    protected function setBuyer(Buyer $buyer) : void
+     {
+         $this->buyer = $buyer;
+     }
+ }
+
+
+19) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/FraudChecker.php:11    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use App\Domain\Entities\Transaction;
+ class FraudChecker
+ {
+-    public function check(Transaction $transaction) : bool
++    protected function check(Transaction $transaction) : bool
+     {
+         return false;
+     }
+ }
+
+
+20) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/FraudChecker.php:13    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+ {
+     public function check(Transaction $transaction) : bool
+     {
+-        return false;
++        return true;
+     }
+ }
+
+
+21) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/Notifier.php:22    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         $this->client = $client;
+     }
+-    public function notify(Notification $notification) : void
++    protected function notify(Notification $notification) : void
+     {
+         $this->client->notify($notification);
+     }
+ }
+
+
+22) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/Notifier.php:24    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function notify(Notification $notification) : void
+     {
+-        $this->client->notify($notification);
++        
+     }
+ }
+
+
+23) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TransactionHandler.php:50    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @throws Exception
+      */
+-    public function create(Transaction $transaction) : Transaction
++    protected function create(Transaction $transaction) : Transaction
+     {
+         /**
+          * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
+
+
+24) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TransactionHandler.php:57    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+          * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
+          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
+          */
+-        if (!$this->fraudChecker->check($transaction)) {
++        if ($this->fraudChecker->check($transaction)) {
+             throw new Exception("Deu erro aqui.");
+         }
+         /**
+
+
+25) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TransactionHandler.php:58    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
+          */
+         if (!$this->fraudChecker->check($transaction)) {
+-            throw new Exception("Deu erro aqui.");
++            new Exception("Deu erro aqui.");
+         }
+         /**
+          * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay, pra saber o valor total da taxa tem
+
+
+26) /Users/diegoferreira/Projects/picpay-php-test/src/App/Domain/Services/TransactionHandler.php:72    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+          * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
+          */
+         $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+-        /**
+-         * Draco: Salva a data de criação da transação
+-         */
+-        $transaction->setCreatedDate(new DateTime());
++        
+         /**
+          * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
+          * é culpa do Crabbe que não fez a classe de notificação direito
