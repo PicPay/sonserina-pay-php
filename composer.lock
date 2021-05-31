@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6026f9a4065e0d913213a499c25c587",
+    "content-hash": "fb4eed0a2e2c580426d4b4e404059e6a",
     "packages": [],
     "packages-dev": [
         {
@@ -1398,12 +1398,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "305d867015899a9f5aa08d3a21f3864306baa26c"
+                "reference": "cb1e58570c1935718a7199fcd92c04d6d2e29318"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/305d867015899a9f5aa08d3a21f3864306baa26c",
-                "reference": "305d867015899a9f5aa08d3a21f3864306baa26c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/cb1e58570c1935718a7199fcd92c04d6d2e29318",
+                "reference": "cb1e58570c1935718a7199fcd92c04d6d2e29318",
                 "shasum": ""
             },
             "require": {
@@ -1493,7 +1493,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-05-26T08:44:16+00:00"
+            "time": "2021-05-30T06:27:57+00:00"
         },
         {
             "name": "psr/container",
