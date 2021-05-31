@@ -11,6 +11,11 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "9.5.x-dev"
+    "phpunit/phpunit": "9.5.x-dev",
+    "infection/infection": "dev-master"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit --coverage-text",
+    "infection": "vendor/bin/infection --min-msi=100 --min-covered-msi=100"
   }
 }
