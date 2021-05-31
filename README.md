@@ -38,6 +38,7 @@ Problemas que reportados:
 taxas e o valor total correto das transações
 - Notificações não estão funcionando
 - Quando as notificações estavam enviando as vezes enviava mesmo quando uma transação falhava na hora de salvar.
+- Precisamos colocar essa aplicação em um container (Docker) para que ela não dependa de um ambiente local
 - Ela também falou que não estamos cobrindo bem a nossa aplicação com testes, eu até comecei a fazer alguns testes,
   mas achei facil demais, se você quiser pode usar ele como exemplo. Ela disse que o ideal é cobrirmos 100% dos testes. 
   Para executar os testes é só rodar `./vendor/bin/phpunit --coverage-text`.
