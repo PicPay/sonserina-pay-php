@@ -2,4 +2,4 @@
 vendor/
 .phpunit*
 .idea*
-./tests/reports
+./tests/reports/*
