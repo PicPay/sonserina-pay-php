@@ -5,8 +5,12 @@
         ]
     },
     "logs": {
-        "text": "tests\/reports/infection.txt"
+        "text": "tests\/reports\/infection\/infection.log",
+        "summary": "tests\/reports\/infection\/summary.log",
+        "json": "tests\/reports\/infection\/infection-log.json",
+        "perMutator": "tests\/reports\/infection\/per-mutator.md"
     },
+    "testFramework":"phpunit",
     "mutators": {
         "@default": true
     }
