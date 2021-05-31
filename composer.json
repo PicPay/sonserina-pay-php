@@ -1,5 +1,5 @@
 {
-  "name": "SonserinaPay",
+  "name": "picpay/sonserina-pay",
   "description": "This is a test for PHP Language on PicPay.",
   "license": "MIT",
   "minimum-stability": "dev",
