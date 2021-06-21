@@ -16,6 +16,8 @@ Tarefas:
 1 - Você deverá implementar uma classe para checagem anti fraude (App\Domain\Services\FraudChecker), eu já comecei a
 criar a classe, mas fiquei com preguiça. 
 
+A Granger pediu para fazer o código de uma maneira que mais regras podem ser implementadas nesse fluxo. 
+
 As regras dessa classe são:
 - Essa classe deve ser chamado toda vez que uma transação for criada
 - A classe vai consultar 2 serviços diferentes de checagem, esses serviços são de terceiros e por isso só vamos nos 
@@ -28,7 +30,7 @@ transação sem consultar o segundo
 transação
 - Se possível ordem de execução dos clientes devem ser alteradas sem necessáriamente alterar a classe
 
-2 - A classe principal do nosso serviço é o TransactionHandler (App\Domain\Services\FraudChecker) e segundo a Granger,
+2 - A classe principal do nosso serviço é o TransactionHandler (App\Domain\Services\TransactionHandler) e segundo a Granger,
 nosso código não tá bom e apresenta muito erros. Precisamos que você melhore o código para nós.
 
 Problemas que reportados:
@@ -45,10 +47,9 @@ taxas e o valor total correto das transações
 - A Granger falou que nosso código não tá bom! Quem é essa sang#& ru$% pra falar do meu código. Disse para aplicarmos
   melhor SOLID, Object Calisthenics e conceitos do livro Clean Code (Código Limpo) do Uncle Bob. Acredito que não tem
   como melhorar esse código afinal de contas, fui eu quem fiz. Mas tenta ai só pra que eu tenha certeza que sou perfeito.
+- A Granger criou uma tal de pipeline com o Github Actions, ela pediu para tentar fazer ela passar sem nenhum erro.
   
 Observação:
 
 _Não precisa se preocupar com fazer um endpoint ou cli para a execução do seu código ou com a implementação real das
 chamadas para os clientes, ou persistencia em banco de dados. Faremos isso com mágica._
-
-
