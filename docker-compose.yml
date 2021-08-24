@@ -1,0 +1,17 @@
+version: "3.2"
+services:
+   nginx:
+       container_name: nginx
+       image: nginx:1.17.8
+       ports:
+           - 8080:80
+       volumes:
+           - ./site.conf:/etc/nginx/conf.d/site.conf
+           - ./:/sonserina_pay
+       links:
+           - sonserina_pay
+   sonserina_pay:
+       build: .
+       container_name: sonserina_pay
+       volumes:
+           - ./:/var/www/html/sonserina_pay
