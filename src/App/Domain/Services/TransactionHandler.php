@@ -65,6 +65,13 @@ class TransactionHandler
          * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
          */
         $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+        $transaction->setTotalAmount($totalValueComTaxas);
+
+        $slytherinPayTax = $this->taxCalculator->calculateSlytherinPayTax($transaction->getInitialAmount(), $transaction->getSellerTax(), $transaction->getTotalAmount());
+        $transaction->setSlytherinPayTax($slytherinPayTax);
+
+        $totalTax = $this->taxCalculator->calculateTotalTax($transaction->getSlytherinPayTax(), $transaction->getSellerTax());
+        $transaction->setTotalTax($totalTax);
 
         /**
          * Draco: Salva a data de criação da transação
