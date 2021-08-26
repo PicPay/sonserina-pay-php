@@ -15,4 +15,9 @@ class Seller
      * @var string
      */
     private string $name;
+
+    /**
+     * @var string
+     */
+    private string $email;
 }

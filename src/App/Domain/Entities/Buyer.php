@@ -15,4 +15,9 @@ class Buyer
      * @var string
      */
     private string $name;
+
+    /**
+     * @var string
+     */
+    private string $email;
 }

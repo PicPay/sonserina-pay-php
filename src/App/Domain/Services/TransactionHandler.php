@@ -82,12 +82,24 @@ class TransactionHandler
          * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
          * é culpa do Crabbe que não fez a classe de notificação direito
          */
-//        $this->notifier->notify($transaction);
 
         /**
          * Crabbe: Aqui salva a transação
          * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
          */
-        return $this->repository->save($transaction);
+        
+        $buyerEmail = $transaction->getBuyer()->email;        
+        $sellerEmail = $transaction->getSeller()->email;
+        
+        $this->repository->save($transaction, $buyerEmail, $sellerEmail);
+
+        $notification = new Notification($buyerEmail, "Transação aprovada");
+        $this->notifier->notify($notification);
+
+        $notification = new Notification($sellerEmail, "Transação aprovada");
+        $this->notifier->notify($notification);
+
+        return $transaction;
+
     }
 }
