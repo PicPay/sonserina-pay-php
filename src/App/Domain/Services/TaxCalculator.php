@@ -46,4 +46,25 @@ class TaxCalculator
     {
         return $amount * $this->getRealTaxValue($tax);
     }
+    
+    /**
+     * @param float $initialAmount
+     * @param float $sellerTax
+     * @param float $totalValueComTaxas
+     * @return float
+     */
+    public function calculateSlytherinPayTax(float $initialAmount, float $sellerTax, float $totalValueComTaxas): float
+    {
+        return abs($initialAmount + $sellerTax - $totalValueComTaxas);
+    }
+
+    /**
+     * @param float $slytherinPayTax
+     * @param float $sellerTax
+     * @return float
+     */
+    public function calculateTotalTax(float $slytherinPayTax, float $sellerTax): float
+    {
+        return $slytherinPayTax + $sellerTax;
+    }
 }

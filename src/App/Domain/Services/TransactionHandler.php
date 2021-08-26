@@ -54,7 +54,7 @@ class TransactionHandler
          * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
          */
-        if (!$this->fraudChecker->check($transaction)) {
+        if (!$this->fraudChecker->check($transaction, true)) {
             throw new Exception("Deu erro aqui.");
         }
 
@@ -65,6 +65,13 @@ class TransactionHandler
          * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
          */
         $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+        $transaction->setTotalAmount($totalValueComTaxas);
+
+        $slytherinPayTax = $this->taxCalculator->calculateSlytherinPayTax($transaction->getInitialAmount(), $transaction->getSellerTax(), $transaction->getTotalAmount());
+        $transaction->setSlytherinPayTax($slytherinPayTax);
+
+        $totalTax = $this->taxCalculator->calculateTotalTax($transaction->getSlytherinPayTax(), $transaction->getSellerTax());
+        $transaction->setTotalTax($totalTax);
 
         /**
          * Draco: Salva a data de criação da transação
@@ -75,12 +82,24 @@ class TransactionHandler
          * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
          * é culpa do Crabbe que não fez a classe de notificação direito
          */
-//        $this->notifier->notify($transaction);
 
         /**
          * Crabbe: Aqui salva a transação
          * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
          */
-        return $this->repository->save($transaction);
+        
+        $buyerEmail = $transaction->getBuyer()->email;        
+        $sellerEmail = $transaction->getSeller()->email;
+        
+        $this->repository->save($transaction, $buyerEmail, $sellerEmail);
+
+        $notification = new Notification($buyerEmail, "Transação aprovada");
+        $this->notifier->notify($notification);
+
+        $notification = new Notification($sellerEmail, "Transação aprovada");
+        $this->notifier->notify($notification);
+
+        return $transaction;
+
     }
 }

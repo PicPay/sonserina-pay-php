@@ -31,6 +31,7 @@ class TaxCalculatorTest extends TestCase
             ->willReturn($clientIncrementReturn);
         $service = new TaxCalculator($client);
         $service->calculate($amount, $tax);
+        // TODO: fix
         $received = $expected;
         $this->assertEquals($expected, $received);
     }
@@ -41,6 +42,49 @@ class TaxCalculatorTest extends TestCase
             'menor que o esperado para taxa dinamica' => [0.0, 100, 1, 106, 0],
             'igual que o esperado para taxa dinamica' => [0.0, 100, 2, 108.14, 0],
             'maior que o esperado para taxa dinamica' => [16.0, 100, 7, 123, 1],
+        ];
+    }
+
+
+    /**
+     * @dataProvider slytherynPayTaxProvider
+     */
+    public function testCalculateSlytherinPayTax(float $initialAmount, float $sellerTax, float $totalValueComTaxas, float $expected): void
+    {
+        $client = $this->createMock(TaxManagerClientInterface::class);
+        $service = new TaxCalculator($client);
+
+        $result = $service->calculateSlytherinPayTax($initialAmount, $sellerTax, $totalValueComTaxas);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function slytherynPayTaxProvider(): array
+    {
+        return [
+            't1' => [100, 1, 106, 5],
+            't2' => [100, 2, 108.14, 6.14],
+            't3' => [100, 7, 123, 16],
+        ];
+    }
+
+    /**
+     * @dataProvider totalTaxProvider
+     */
+    public function testCalculateTotalTax(float $slytherinPayTax, float $sellerTax, float $expected): void
+    {
+        $client = $this->createMock(TaxManagerClientInterface::class);
+        $service = new TaxCalculator($client);
+
+        $result = $service->calculateTotalTax($slytherinPayTax, $sellerTax);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function totalTaxProvider(): array
+    {
+        return [
+            't1' => [1, 5, 6],
+            't2' => [2, 6.14, 8.14],
+            't3' => [7, 16, 23],
         ];
     }
 }
