@@ -54,7 +54,7 @@ class TransactionHandler
          * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
          */
-        if (!$this->fraudChecker->check($transaction)) {
+        if (!$this->fraudChecker->check($transaction, true)) {
             throw new Exception("Deu erro aqui.");
         }
 
