@@ -1,5 +1,10 @@
 # Desafio Consertando o SonserinaPay
 _________
+
+## Como rodar
+- Instale o Docker
+- Execute `docker-compose up -d`
+
 ## Apresentações 
 Olá, meu nome é Malfoy, Draco Malfoy, como todo bom desenvolvedor também sou um bruxo.
 
