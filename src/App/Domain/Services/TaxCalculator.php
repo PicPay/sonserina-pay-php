@@ -9,6 +9,7 @@ use App\Domain\Clients\TaxManagerClientInterface;
 class TaxCalculator
 {
     private const DEFAULT_INCREMENT_VALUE = 3.14;
+    private const MIN_TAX_VALUE_TO_CALL_CLIENT = 5;
 
     /**
      * @var TaxManagerClientInterface
@@ -31,7 +32,7 @@ class TaxCalculator
     private function getRealTaxValue(float $tax): float
     {
         $increment = self::DEFAULT_INCREMENT_VALUE;
-        if ($tax > 5) {
+        if ($tax > self::MIN_TAX_VALUE_TO_CALL_CLIENT) {
             $increment = $this->client->getIncrementValue($tax);
         }
         return 1 + (($increment + $tax) / 100);

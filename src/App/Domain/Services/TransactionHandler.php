@@ -36,8 +36,7 @@ class TransactionHandler
         TaxCalculator $taxCalculator,
         FraudChecker $fraudChecker,
         Notifier $notifier
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->taxCalculator = $taxCalculator;
         $this->fraudChecker = $fraudChecker;
@@ -59,12 +58,16 @@ class TransactionHandler
         }
 
         /**
-         * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay, pra saber o valor total da taxa tem
+         * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay,
+         * pra saber o valor total da taxa tem
          * que calcular inicialAmount + sellerTaxa - valorTotalWithTax = taxaSonserinaPay
          * pra saber o total de taxas tem que somar a taxa do sonserinapay com a taxa do lojista
          * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
          */
-        $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+        $totalValueComTaxas = $this->taxCalculator->calculate(
+            $transaction->getInitialAmount(),
+            $transaction->getSellerTax()
+        );
 
         /**
          * Draco: Salva a data de criação da transação
@@ -79,7 +82,8 @@ class TransactionHandler
 
         /**
          * Crabbe: Aqui salva a transação
-         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
+         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação
+         * pro cliente, mas paciência né?
          */
         return $this->repository->save($transaction);
     }

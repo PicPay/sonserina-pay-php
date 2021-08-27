@@ -9,7 +9,7 @@ class Seller
     /**
      * @var string
      */
-    private string $id;
+    private string $sellerId;
 
     /**
      * @var string

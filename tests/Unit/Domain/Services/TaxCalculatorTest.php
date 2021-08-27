@@ -18,8 +18,13 @@ class TaxCalculatorTest extends TestCase
     /**
      * @dataProvider taxDataProvider
      */
-    public function testCalculateFunction(float $clientIncrementReturn, float $amount, float $tax, float $expected, int $countClientCalls): void
-    {
+    public function testCalculateFunction(
+        float $incrementReturn,
+        float $amount,
+        float $tax,
+        float $expected,
+        int $countClientCalls
+    ): void {
         /**
          * Fiz testes na minha aplicação, agora ela não tem problemas, passa em todos os testes.
          * Tá igual na doc, impossivel tá errado.
@@ -28,7 +33,7 @@ class TaxCalculatorTest extends TestCase
         $client = $this->createMock(TaxManagerClientInterface::class);
         $client->expects($this->exactly($countClientCalls))
             ->method('getIncrementValue')
-            ->willReturn($clientIncrementReturn);
+            ->willReturn($incrementReturn);
         $service = new TaxCalculator($client);
         $service->calculate($amount, $tax);
         $received = $expected;

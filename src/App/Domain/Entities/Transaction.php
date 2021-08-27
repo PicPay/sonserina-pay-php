@@ -11,7 +11,7 @@ class Transaction
     /**
      * @var string
      */
-    private string $id;
+    private string $transactionId;
 
     /**
      * @var float
@@ -58,15 +58,15 @@ class Transaction
      */
     public function getId(): string
     {
-        return $this->id;
+        return $this->transactionId;
     }
 
     /**
-     * @param string $id
+     * @param string $transactionId
      */
-    public function setId(string $id): void
+    public function setId(string $transactionId): void
     {
-        $this->id = $id;
+        $this->transactionId = $transactionId;
     }
 
     /**
