@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Repositories\TransactionRepositoryInterface;
+use App\Domain\Contracts\TransactionRepositoryInterface;
 use DateTime;
 use Exception;
 
