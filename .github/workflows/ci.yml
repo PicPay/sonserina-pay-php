@@ -39,3 +39,6 @@ jobs:
 
       - name: Run infection
         run: composer run-script infection
+
+      - name: Check Quality
+        run: composer run-script check:quality

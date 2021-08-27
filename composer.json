@@ -21,6 +21,7 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit --coverage-text",
+    "check:quality": "vendor/bin/grump run",
     "infection": "vendor/bin/infection --min-msi=100 --min-covered-msi=100"
   }
 }
