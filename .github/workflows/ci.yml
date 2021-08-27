@@ -33,12 +33,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
+        
+      - name: Check Quality
+        run: composer run-script check:quality
 
       - name: Run test suite
         run: composer run-script test
 
       - name: Run infection
         run: composer run-script infection
-
-      - name: Check Quality
-        run: composer run-script check:quality
