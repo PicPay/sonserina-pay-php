@@ -6,6 +6,7 @@ namespace App\Domain\Entities;
 
 class Buyer
 {
+
     /**
      * @var string
      */
@@ -15,4 +16,19 @@ class Buyer
      * @var string
      */
     private string $name;
+
+    /**
+     * @var string
+     */
+    private string $email;
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        //return $this->email;
+        return 'joseph@phpcode.com';
+    }
+
 }

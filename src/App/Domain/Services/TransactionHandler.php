@@ -6,11 +6,13 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
 use App\Domain\Contracts\TransactionRepositoryInterface;
+use App\Domain\Entities\Notification;
 use DateTime;
 use Exception;
 
 class TransactionHandler
 {
+
     /**
      * @var TransactionRepositoryInterface
      */
@@ -32,10 +34,10 @@ class TransactionHandler
     private Notifier $notifier;
 
     public function __construct(
-        TransactionRepositoryInterface $repository,
-        TaxCalculator $taxCalculator,
-        FraudChecker $fraudChecker,
-        Notifier $notifier
+            TransactionRepositoryInterface $repository,
+            TaxCalculator $taxCalculator,
+            FraudChecker $fraudChecker,
+            Notifier $notifier
     )
     {
         $this->repository = $repository;
@@ -49,38 +51,71 @@ class TransactionHandler
      */
     public function create(Transaction $transaction): Transaction
     {
-        /**
-         * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
-         * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
-         * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
-         */
-        if (!$this->fraudChecker->check($transaction)) {
-            throw new Exception("Deu erro aqui.");
+        try {
+            $this->check($transaction);
+
+            $configuration = $this->calculate($transaction);
+
+            $this->configure($transaction, $configuration);
+            $this->save($transaction);
+            $this->notify($transaction);
+
+            $print = array_merge($configuration, ['status' => true, 'message' => 'ok']);
+        } catch (\Exception $exc) {
+            $print = ['status' => false, 'message' => $exc->getMessage()];
         }
 
-        /**
-         * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay, pra saber o valor total da taxa tem
-         * que calcular inicialAmount + sellerTaxa - valorTotalWithTax = taxaSonserinaPay
-         * pra saber o total de taxas tem que somar a taxa do sonserinapay com a taxa do lojista
-         * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
-         */
-        $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+        $this->print($print);
 
-        /**
-         * Draco: Salva a data de criação da transação
-         */
-        $transaction->setCreatedDate(new DateTime());
-
-        /**
-         * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
-         * é culpa do Crabbe que não fez a classe de notificação direito
-         */
-//        $this->notifier->notify($transaction);
-
-        /**
-         * Crabbe: Aqui salva a transação
-         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
-         */
-        return $this->repository->save($transaction);
+        return $transaction;
     }
+
+    private function print($data, bool $print = false): void
+    {
+        echo '<pre>';
+        ($print) ? print_r($data) : var_dump($data);
+        echo '</pre>';
+    }
+
+    private function save(Transaction $transaction): void
+    {
+        $this->repository->save($transaction);
+    }
+
+    private function notify(Transaction $transaction): void
+    {
+        $notification = $this->notifier->getClient()->configure($transaction);
+
+        $this->notifier->notify($notification);
+    }
+
+    private function check(Transaction $transaction): void
+    {
+        if (!$this->fraudChecker->check($transaction)) {
+            throw new Exception("Failure of fraud verification rules.");
+        }
+    }
+
+    private function calculate(Transaction $transaction): array
+    {
+        $sellerTax = $transaction->getSellerTax();
+
+        $totalValueWithTax = $this->taxCalculator->calculate($transaction->getInitialAmount(), $sellerTax);
+
+        $sonserinaPay = $transaction->getInitialAmount() + $sellerTax - $totalValueWithTax;
+        $sonserinaPay = abs($sonserinaPay);
+
+        $totalTax = $sellerTax + $sonserinaPay;
+
+        return compact('sellerTax', 'totalValueWithTax', 'totalTax', 'sonserinaPay');
+    }
+
+    private function configure(Transaction $transaction, array $config): void
+    {
+        $transaction->setCreatedDate(new DateTime());
+        $transaction->setTotalTax($config['totalTax']);
+        $transaction->setSlytherinPayTax($config['sonserinaPay']);
+        $transaction->setTotalAmount($config['totalValueWithTax']);
+    }
+
 }

@@ -9,6 +9,7 @@ use App\Domain\Entities\Notification;
 
 class Notifier
 {
+
     /**
      * @var NotifierClientInterface
      */
@@ -19,8 +20,14 @@ class Notifier
         $this->client = $client;
     }
 
+    public function getClient(): NotifierClientInterface
+    {
+        return $this->client;
+    }
+
     public function notify(Notification $notification): void
     {
         $this->client->notify($notification);
     }
+
 }
