@@ -8,8 +8,8 @@ class FraudCheckerContainer
 {
 
     private $servicesConsulting = [
-        \App\Domain\Libraries\FraudChecker\Vendor\SDK::class,
-        \App\Domain\Libraries\FraudChecker\Vendor\API::class
+        \App\Domain\Libraries\FraudChecker\Vendor\API::class,
+        \App\Domain\Libraries\FraudChecker\Vendor\SDK::class
     ];
 
     public function getServices(): array

@@ -12,7 +12,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function save(Transaction $transaction): Transaction
     {
-        //save another magic in database here ...
+        // save in database here ...
 
         return $transaction;
     }

@@ -18,12 +18,12 @@ class FraudCheckerIterator
         $this->checkersList = array();
     }
 
-    public function isLastChecker()
+    public function isLastChecker(): bool
     {
         return ($this->getListLength() == $this->checkerCounter);
     }
 
-    public function incrementCheckerCount()
+    public function incrementCheckerCount(): void
     {
         $this->checkerCounter++;
     }
@@ -33,7 +33,7 @@ class FraudCheckerIterator
         return $this->listLength;
     }
 
-    public function setCheckersList(array $list)
+    public function setCheckersList(array $list): void
     {
         $this->checkersList = $list;
         $this->listLength = count($list);

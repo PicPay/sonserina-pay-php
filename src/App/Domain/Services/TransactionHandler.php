@@ -5,44 +5,53 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Contracts\TransactionRepositoryInterface;
-use App\Domain\Entities\Notification;
-use DateTime;
+use App\Domain\Services\Transaction\TransactionChecker;
+use App\Domain\Services\Transaction\TransactionCalculator;
+use App\Domain\Services\Transaction\TransactionConfigurator;
+use App\Domain\Services\Transaction\TransactionSaver;
+use App\Domain\Services\Transaction\TransactionNotifier;
 use Exception;
 
 class TransactionHandler
 {
 
     /**
-     * @var TransactionRepositoryInterface
+     * @var TransactionChecker
      */
-    private TransactionRepositoryInterface $repository;
+    private TransactionChecker $checker;
 
     /**
-     * @var TaxCalculator
+     * @var TransactionCalculator
      */
-    private TaxCalculator $taxCalculator;
+    private TransactionCalculator $calculator;
 
     /**
-     * @var FraudChecker
+     * @var TransactionConfigurator
      */
-    private FraudChecker $fraudChecker;
+    private TransactionConfigurator $configurator;
 
     /**
-     * @var Notifier
+     * @var TransactionSaver
      */
-    private Notifier $notifier;
+    private TransactionSaver $saver;
+
+    /**
+     * @var TransactionNotifier
+     */
+    private TransactionNotifier $notifier;
 
     public function __construct(
-            TransactionRepositoryInterface $repository,
-            TaxCalculator $taxCalculator,
-            FraudChecker $fraudChecker,
-            Notifier $notifier
+            TransactionChecker $checker,
+            TransactionCalculator $calculator,
+            TransactionConfigurator $configurator,
+            TransactionSaver $saver,
+            TransactionNotifier $notifier
     )
     {
-        $this->repository = $repository;
-        $this->taxCalculator = $taxCalculator;
-        $this->fraudChecker = $fraudChecker;
+        $this->checker = $checker;
+        $this->calculator = $calculator;
+        $this->configurator = $configurator;
+        $this->saver = $saver;
         $this->notifier = $notifier;
     }
 
@@ -52,15 +61,15 @@ class TransactionHandler
     public function create(Transaction $transaction): Transaction
     {
         try {
-            $this->check($transaction);
+            $this->checker->process($transaction);
 
-            $configuration = $this->calculate($transaction);
+            $configuration = $this->calculator->process($transaction);
+            $this->configurator->process($transaction, $configuration);
 
-            $this->configure($transaction, $configuration);
-            $this->save($transaction);
-            $this->notify($transaction);
+            $this->saver->process($transaction);
+            $this->notifier->process($transaction);
 
-            $print = array_merge($configuration, ['status' => true, 'message' => 'ok']);
+            $print = array_merge($configuration, ['status' => true, 'message' => 'Okay']);
         } catch (\Exception $exc) {
             $print = ['status' => false, 'message' => $exc->getMessage()];
         }
@@ -75,47 +84,6 @@ class TransactionHandler
         echo '<pre>';
         ($print) ? print_r($data) : var_dump($data);
         echo '</pre>';
-    }
-
-    private function save(Transaction $transaction): void
-    {
-        $this->repository->save($transaction);
-    }
-
-    private function notify(Transaction $transaction): void
-    {
-        $notification = $this->notifier->getClient()->configure($transaction);
-
-        $this->notifier->notify($notification);
-    }
-
-    private function check(Transaction $transaction): void
-    {
-        if (!$this->fraudChecker->check($transaction)) {
-            throw new Exception("Failure of fraud verification rules.");
-        }
-    }
-
-    private function calculate(Transaction $transaction): array
-    {
-        $sellerTax = $transaction->getSellerTax();
-
-        $totalValueWithTax = $this->taxCalculator->calculate($transaction->getInitialAmount(), $sellerTax);
-
-        $sonserinaPay = $transaction->getInitialAmount() + $sellerTax - $totalValueWithTax;
-        $sonserinaPay = abs($sonserinaPay);
-
-        $totalTax = $sellerTax + $sonserinaPay;
-
-        return compact('sellerTax', 'totalValueWithTax', 'totalTax', 'sonserinaPay');
-    }
-
-    private function configure(Transaction $transaction, array $config): void
-    {
-        $transaction->setCreatedDate(new DateTime());
-        $transaction->setTotalTax($config['totalTax']);
-        $transaction->setSlytherinPayTax($config['sonserinaPay']);
-        $transaction->setTotalAmount($config['totalValueWithTax']);
     }
 
 }

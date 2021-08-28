@@ -8,5 +8,13 @@ use App\Domain\Exceptions\FraudCheckerException;
 
 class FraudCheckerEmptyException extends FraudCheckerException
 {
-    
+
+    public function __construct(
+            string $message = 'There are no anti-fraud checkers to proceed with the transaction',
+            int $code = 0,
+            \Throwable $previous = NULL)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
 }
