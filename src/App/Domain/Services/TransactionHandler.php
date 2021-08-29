@@ -74,7 +74,7 @@ class TransactionHandler
             $print = ['status' => false, 'message' => $exc->getMessage()];
         }
 
-        $this->print($print);
+        //$this->print($print);
 
         return $transaction;
     }

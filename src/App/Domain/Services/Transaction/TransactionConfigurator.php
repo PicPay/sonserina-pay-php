@@ -14,9 +14,9 @@ class TransactionConfigurator implements TransactionProcessorInterface
     {
         if (
                 !is_array($complement) || (
-                !isset($complement['totalTax']) ||
-                !isset($complement['sonserinaPay']) ||
-                !isset($complement['totalValueWithTax']))
+                !(isset($complement['totalTax']) && is_float($complement['totalTax'])) ||
+                !(isset($complement['sonserinaPay']) && is_float($complement['sonserinaPay'])) ||
+                !(isset($complement['totalValueWithTax']) && is_float($complement['totalValueWithTax'])))
         ) {
             throw new \Exception('It was not possible to perform the configuration with the sent parameters');
         }

@@ -24,7 +24,7 @@ class TransactionChecker implements TransactionProcessorInterface
     public function process(Transaction $transaction, $complement = null): void
     {
         if (!$this->fraudChecker->check($transaction)) {
-            throw new \Exception("Failure of fraud verification rules.");
+            throw new \Exception('Failure of fraud verification rules.');
         }
     }
 

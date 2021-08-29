@@ -24,10 +24,11 @@ class TransactionCalculator implements TransactionProcessorInterface
     public function process(Transaction $transaction, $complement = null): array
     {
         $sellerTax = $transaction->getSellerTax();
+        $initialAmount = $transaction->getInitialAmount();
 
-        $totalValueWithTax = $this->taxCalculator->calculate($transaction->getInitialAmount(), $sellerTax);
+        $totalValueWithTax = $this->taxCalculator->calculate($initialAmount, $sellerTax);
 
-        $sonserinaPay = $transaction->getInitialAmount() + $sellerTax - $totalValueWithTax;
+        $sonserinaPay = $initialAmount + $sellerTax - $totalValueWithTax;
         $sonserinaPay = abs($sonserinaPay);
 
         $totalTax = $sellerTax + $sonserinaPay;
