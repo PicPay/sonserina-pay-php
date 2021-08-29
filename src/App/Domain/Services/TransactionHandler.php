@@ -40,6 +40,13 @@ class TransactionHandler
      */
     private TransactionNotifier $notifier;
 
+    /**
+     * @param TransactionChecker $checker
+     * @param TransactionCalculator $calculator
+     * @param TransactionConfigurator $configurator
+     * @param TransactionSaver $saver
+     * @param TransactionNotifier $notifier
+     */
     public function __construct(
             TransactionChecker $checker,
             TransactionCalculator $calculator,
@@ -56,7 +63,8 @@ class TransactionHandler
     }
 
     /**
-     * @throws Exception
+     * @param Transaction $transaction
+     * @return Transaction
      */
     public function create(Transaction $transaction): Transaction
     {
@@ -81,7 +89,12 @@ class TransactionHandler
         return $transaction;
     }
 
-    private function print($data, bool $print = false): void
+    /**
+     * @param type $data
+     * @param bool $print
+     * @return void
+     */
+    private function print($data = null, bool $print = false): void
     {
         echo '<pre>';
         ($print !== false) ? print_r($data) : var_dump($data);

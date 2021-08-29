@@ -16,11 +16,19 @@ class TransactionCalculator implements TransactionProcessorInterface
      */
     private TaxCalculator $taxCalculator;
 
+    /**
+     * @param TaxCalculator $taxCalculator
+     */
     public function __construct(TaxCalculator $taxCalculator)
     {
         $this->taxCalculator = $taxCalculator;
     }
 
+    /**
+     * @param Transaction $transaction
+     * @param type $complement
+     * @return array
+     */
     public function process(Transaction $transaction, $complement = null): array
     {
         $sellerTax = $transaction->getSellerTax();

@@ -16,11 +16,20 @@ class TransactionChecker implements TransactionProcessorInterface
      */
     private FraudChecker $fraudChecker;
 
+    /**
+     * @param FraudChecker $fraudChecker
+     */
     public function __construct(FraudChecker $fraudChecker)
     {
         $this->fraudChecker = $fraudChecker;
     }
 
+    /**
+     * @param Transaction $transaction
+     * @param type $complement
+     * @return void
+     * @throws \Exception
+     */
     public function process(Transaction $transaction, $complement = null): void
     {
         if (!$this->fraudChecker->check($transaction)) {

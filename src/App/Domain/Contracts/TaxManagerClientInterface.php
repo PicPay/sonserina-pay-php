@@ -10,6 +10,7 @@ namespace App\Domain\Contracts;
  */
 interface TaxManagerClientInterface
 {
+
     /**
      * @param float $amount
      * @return float

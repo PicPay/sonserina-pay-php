@@ -9,5 +9,9 @@ use App\Domain\Entities\Transaction;
 interface TransactionProcessorInterface
 {
 
+    /**
+     * @param Transaction $transaction
+     * @param type $complement
+     */
     public function process(Transaction $transaction, $complement = null);
 }

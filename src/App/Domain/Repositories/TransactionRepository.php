@@ -10,6 +10,10 @@ use App\Domain\Entities\Transaction;
 class TransactionRepository implements TransactionRepositoryInterface
 {
 
+    /**
+     * @param Transaction $transaction
+     * @return Transaction
+     */
     public function save(Transaction $transaction): Transaction
     {
         // save in database here ...

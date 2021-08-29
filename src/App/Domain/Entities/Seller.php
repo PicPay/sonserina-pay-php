@@ -6,6 +6,7 @@ namespace App\Domain\Entities;
 
 class Seller
 {
+
     /**
      * @var string
      */
@@ -15,4 +16,5 @@ class Seller
      * @var string
      */
     private string $name;
+
 }

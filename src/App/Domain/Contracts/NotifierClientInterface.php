@@ -8,5 +8,6 @@ use App\Domain\Entities\Notification;
 
 interface NotifierClientInterface
 {
+
     public function notify(Notification $notifier): void;
 }

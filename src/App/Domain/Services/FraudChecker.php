@@ -13,8 +13,15 @@ use App\Domain\Libraries\FraudChecker\FraudCheckerIterator;
 class FraudChecker
 {
 
+    /**
+     * @var array 
+     */
     private array $servicesConsultingList;
 
+    /**
+     * @param FraudCheckerContainer $container
+     * @param FraudCheckerIterator $iterator
+     */
     public function __construct(FraudCheckerContainer $container, FraudCheckerIterator $iterator)
     {
         $this->servicesConsultingList = array();
@@ -25,16 +32,28 @@ class FraudChecker
         ];
     }
 
+    /**
+     * @return FraudCheckerIterator
+     */
     public function getIterator(): FraudCheckerIterator
     {
         return $this->dependencies['iterator'];
     }
 
+    /**
+     * @return FraudCheckerContainer
+     */
     public function getContainer(): FraudCheckerContainer
     {
         return $this->dependencies['container'];
     }
 
+    /**
+     * @param Transaction $transaction
+     * @return bool
+     * @throws FraudCheckerEmptyException
+     * @throws FraudCheckerNotAuthorizedException
+     */
     public function check(Transaction $transaction): bool
     {
         $list = $this->getServicesConsultingList();
@@ -47,7 +66,7 @@ class FraudChecker
         foreach ($list as $checker) {
 
             $this->getIterator()->incrementCheckerCount();
-            
+
             $checker->check($transaction);
             if ($checker->isAuthorized()) {
                 return true;
@@ -59,7 +78,10 @@ class FraudChecker
         }
     }
 
-    private function getServicesConsultingList()
+    /**
+     * @return array
+     */
+    private function getServicesConsultingList(): array
     {
         return $this->servicesConsultingList = $this->getContainer()->getServices();
     }

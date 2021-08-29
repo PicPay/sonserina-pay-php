@@ -10,6 +10,12 @@ use App\Domain\Entities\Transaction;
 class TransactionConfigurator implements TransactionProcessorInterface
 {
 
+    /**
+     * @param Transaction $transaction
+     * @param type $complement
+     * @return void
+     * @throws \Exception
+     */
     public function process(Transaction $transaction, $complement = null): void
     {
         if (

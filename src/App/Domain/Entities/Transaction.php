@@ -8,6 +8,7 @@ use DateTime;
 
 class Transaction
 {
+
     /**
      * @var string
      */
@@ -196,4 +197,5 @@ class Transaction
     {
         $this->buyer = $buyer;
     }
+
 }

@@ -9,6 +9,11 @@ use App\Domain\Exceptions\FraudCheckerException;
 class FraudCheckerNotAuthorizedException extends FraudCheckerException
 {
 
+    /**
+     * @param string $message
+     * @param int $code
+     * @param \Throwable $previous
+     */
     public function __construct(
             string $message = 'The anti-fraud check did not authorize a transaction',
             int $code = 0,

@@ -11,8 +11,15 @@ use App\Domain\Entities\Transaction;
 class NotifierLibrary implements NotifierClientInterface
 {
 
+    /**
+     * @var Notification 
+     */
     private Notification $notification;
 
+    /**
+     * @param Transaction $transaction
+     * @return Notification
+     */
     public function configure(Transaction $transaction): Notification
     {
         $this->notification = new Notification();
@@ -22,11 +29,18 @@ class NotifierLibrary implements NotifierClientInterface
         return $this->getNotification();
     }
 
+    /**
+     * @return Notification
+     */
     public function getNotification(): Notification
     {
         return $this->notification;
     }
 
+    /**
+     * @param Notification $notification
+     * @return void
+     */
     public function notify(Notification $notification): void
     {
         echo 'Notifying ... [' . $notification->getEmail() . ']' . PHP_EOL;

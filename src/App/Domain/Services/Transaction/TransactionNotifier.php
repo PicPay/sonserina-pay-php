@@ -16,11 +16,19 @@ class TransactionNotifier implements TransactionProcessorInterface
      */
     private Notifier $notifier;
 
+    /**
+     * @param Notifier $notifier
+     */
     public function __construct(Notifier $notifier)
     {
         $this->notifier = $notifier;
     }
 
+    /**
+     * @param Transaction $transaction
+     * @param type $complement
+     * @return void
+     */
     public function process(Transaction $transaction, $complement = null): void
     {
         $notification = $this->notifier->getClient()->configure($transaction);

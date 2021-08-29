@@ -8,5 +8,10 @@ use App\Domain\Entities\Transaction;
 
 interface TransactionRepositoryInterface
 {
+
+    /**
+     * @param Transaction $transaction
+     * @return Transaction
+     */
     public function save(Transaction $transaction): Transaction;
 }
