@@ -35,13 +35,10 @@ class TransactionCalculator implements TransactionProcessorInterface
         $initialAmount = $transaction->getInitialAmount();
 
         $totalValueWithTax = $this->taxCalculator->calculate($initialAmount, $sellerTax);
+        $slytherinPay = $this->taxCalculator->calculateSlytherinPayTax($initialAmount, $sellerTax, $totalValueWithTax);
+        $totalTax = $this->taxCalculator->calculateTotalTax($slytherinPay, $sellerTax);
 
-        $sonserinaPay = $initialAmount + $sellerTax - $totalValueWithTax;
-        $sonserinaPay = abs($sonserinaPay);
-
-        $totalTax = $sellerTax + $sonserinaPay;
-
-        return compact('sellerTax', 'totalValueWithTax', 'totalTax', 'sonserinaPay');
+        return compact('sellerTax', 'totalValueWithTax', 'totalTax', 'slytherinPay');
     }
 
 }

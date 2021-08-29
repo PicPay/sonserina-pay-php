@@ -21,7 +21,7 @@ class TransactionConfigurator implements TransactionProcessorInterface
         if (
                 !is_array($complement) || (
                 !(isset($complement['totalTax']) && is_float($complement['totalTax'])) ||
-                !(isset($complement['sonserinaPay']) && is_float($complement['sonserinaPay'])) ||
+                !(isset($complement['slytherinPay']) && is_float($complement['slytherinPay'])) ||
                 !(isset($complement['totalValueWithTax']) && is_float($complement['totalValueWithTax'])))
         ) {
             throw new \Exception('It was not possible to perform the configuration with the sent parameters');
@@ -29,7 +29,7 @@ class TransactionConfigurator implements TransactionProcessorInterface
 
         $transaction->setCreatedDate(new \DateTime());
         $transaction->setTotalTax($complement['totalTax']);
-        $transaction->setSlytherinPayTax($complement['sonserinaPay']);
+        $transaction->setSlytherinPayTax($complement['slytherinPay']);
         $transaction->setTotalAmount($complement['totalValueWithTax']);
     }
 

@@ -6,7 +6,7 @@ namespace App\Domain\Libraries;
 
 use App\Domain\Contracts\NotifierClientInterface;
 use App\Domain\Entities\Notification;
-use App\Domain\Entities\Transaction;
+use App\Domain\Contracts\ReceptorEmailClientInterface;
 
 class NotifierLibrary implements NotifierClientInterface
 {
@@ -17,13 +17,13 @@ class NotifierLibrary implements NotifierClientInterface
     private Notification $notification;
 
     /**
-     * @param Transaction $transaction
+     * @param ReceptorEmailClientInterface $receptor
      * @return Notification
      */
-    public function configure(Transaction $transaction): Notification
+    public function configure(ReceptorEmailClientInterface $receptor): Notification
     {
         $this->notification = new Notification();
-        $this->notification->setEmail($transaction->getBuyer()->getEmail());
+        $this->notification->setEmail($receptor->getEmail());
         $this->notification->setMessage('Transaction performed successfully');
 
         return $this->getNotification();

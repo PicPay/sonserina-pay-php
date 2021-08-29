@@ -26,7 +26,13 @@ class TaxCalculatorTest extends TestCase
     }
 
     /**
+     * @param float $clientIncrementReturn
+     * @param float $amount
+     * @param float $tax
+     * @param float $expected
+     * @param int $countClientCalls
      * @dataProvider taxDataProvider
+     * @return void
      */
     public function testCalculateFunction(float $clientIncrementReturn, float $amount, float $tax, float $expected, int $countClientCalls): void
     {
@@ -45,12 +51,69 @@ class TaxCalculatorTest extends TestCase
         $this->assertEquals($expected, $received);
     }
 
+    /**
+     * @return array
+     */
     public function taxDataProvider(): array
     {
         return [
             'menor que o esperado para taxa dinamica' => [0.0, 100, 1, 104.140, 0],
             'igual que o esperado para taxa dinamica' => [0.0, 100, 5, 108.14, 0],
             'maior que o esperado para taxa dinamica' => [16.0, 100, 7, 123, 1],
+        ];
+    }
+
+    /**
+     * @param type $totalValueWithTax
+     * @param type $totalTaxExpected
+     * @dataProvider taxDataProviderSlytherinPayTax
+     * @return void
+     */
+    public function testCalculateSlytherinPayTaxAbs($totalValueWithTax, $totalTaxExpected): void
+    {
+        $sellerTax = 10.0;
+        $initialAmount = 100.0;
+
+        $received = $this->dependencies['main']->calculateSlytherinPayTax(
+                $initialAmount, $sellerTax, $totalValueWithTax
+        );
+
+        $this->assertEquals($totalTaxExpected, $received);
+    }
+
+    /**
+     * @return array
+     */
+    public function taxDataProviderSlytherinPayTax(): array
+    {
+        return [
+            'when sonserine tax is negative' => [120.0, 10.0],
+            'when sonserine tax is positive' => [109.0, 1.0],
+        ];
+    }
+
+    /**
+     * @param float $slytherinPayTax
+     * @param float $sellerTax
+     * @param float $expected
+     * @dataProvider taxDataProviderCalculateTotalTax
+     * @return void
+     */
+    public function testCalculateTotalTax(float $slytherinPayTax, float $sellerTax, float $expected): void
+    {
+        $received = $this->dependencies['main']->calculateTotalTax($slytherinPayTax, $sellerTax);
+
+        $this->assertEquals($expected, $received);
+    }
+
+    /**
+     * @return array
+     */
+    public function taxDataProviderCalculateTotalTax(): array
+    {
+        return [
+            'simple sum' => [1.0, 1.2, 2.2],
+            'complex sum' => [11.0, 11.2, 22.2]
         ];
     }
 

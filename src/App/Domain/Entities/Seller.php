@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Entities;
 
-class Seller
+use App\Domain\Contracts\ReceptorEmailClientInterface;
+use App\Domain\Traits\Emailer;
+
+class Seller implements ReceptorEmailClientInterface
 {
+
+    use Emailer;
 
     /**
      * @var string

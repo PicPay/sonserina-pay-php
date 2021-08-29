@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Entities;
 
-class Buyer
+use App\Domain\Contracts\ReceptorEmailClientInterface;
+use App\Domain\Traits\Emailer;
+
+class Buyer implements ReceptorEmailClientInterface
 {
+
+    use Emailer;
 
     /**
      * @var string
@@ -21,14 +26,5 @@ class Buyer
      * @var string
      */
     private string $email;
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        //return $this->email;
-        return 'joseph@phpcode.com';
-    }
 
 }

@@ -32,7 +32,7 @@ class TransactionConfiguratorTest extends TestCase
     {
         $complement = [
             'totalTax' => 15.0,
-            'sonserinaPay' => 5.0,
+            'slytherinPay' => 5.0,
             'totalValueWithTax' => 20.0
         ];
 
@@ -79,12 +79,12 @@ class TransactionConfiguratorTest extends TestCase
             'invalid complement string' => ['string'],
             'invalid complement true' => [true],
             'invalid complement object' => [new \stdClass()],
-            'invalid complement without totalTax' => [['sonserinaPay' => true, 'totalValueWithTax' => true]],
-            'invalid complement without sonserinaPay' => [['totalTax' => true, 'totalValueWithTax' => true]],
-            'invalid complement without totalValueWithTax' => [['sonserinaPay' => true, 'totalTax' => true]],
-            'invalid complement invalid totalTax' => [['totalTax' => 1, 'sonserinaPay' => 1.0, 'totalValueWithTax' => 1.0]],
-            'invalid complement invalid sonserinaPay' => [['sonserinaPay' => 1, 'totalTax' => 1.0, 'totalValueWithTax' => 1.0]],
-            'invalid complement invalid totalValueWithTax' => [['totalValueWithTax' => 1, 'sonserinaPay' => 1.0, 'totalTax' => 1.0]],
+            'invalid complement without totalTax' => [['slytherinPay' => true, 'totalValueWithTax' => true]],
+            'invalid complement without slytherinPay' => [['totalTax' => true, 'totalValueWithTax' => true]],
+            'invalid complement without totalValueWithTax' => [['slytherinPay' => true, 'totalTax' => true]],
+            'invalid complement invalid totalTax' => [['totalTax' => 1, 'slytherinPay' => 1.0, 'totalValueWithTax' => 1.0]],
+            'invalid complement invalid slytherinPay' => [['slytherinPay' => 1, 'totalTax' => 1.0, 'totalValueWithTax' => 1.0]],
+            'invalid complement invalid totalValueWithTax' => [['totalValueWithTax' => 1, 'slytherinPay' => 1.0, 'totalTax' => 1.0]],
         ];
     }
 

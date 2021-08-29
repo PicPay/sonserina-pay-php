@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use App\Domain\Libraries\NotifierLibrary;
 use App\Domain\Entities\Notification;
 use App\Domain\Entities\Transaction;
+use App\Domain\Contracts\ReceptorEmailClientInterface;
 use App\Domain\Entities\Buyer;
 
 class NotifierLibraryTest extends TestCase
@@ -18,6 +19,7 @@ class NotifierLibraryTest extends TestCase
         parent::setUp();
 
         $clientTransaction = $this->createMock(Transaction::class);
+        $clientReceptorEmailClient = $this->createMock(ReceptorEmailClientInterface::class);
         $clientNotification = $this->createMock(Notification::class);
         $clientBuyer = $this->createMock(Buyer::class);
 
@@ -25,6 +27,7 @@ class NotifierLibraryTest extends TestCase
 
         $this->dependencies = [
             'Transaction' => $clientTransaction,
+            'ReceptorEmailClientInterface' => $clientReceptorEmailClient,
             'Notification' => $clientNotification,
             'Buyer' => $clientBuyer,
             'main' => $main
@@ -33,17 +36,12 @@ class NotifierLibraryTest extends TestCase
 
     public function testConfigure(): void
     {
-        $this->dependencies['Transaction']->expects($this->exactly(1))
-                ->method('getBuyer')
-                ->with()
-                ->willReturn($this->dependencies['Buyer']);
-
-        $this->dependencies['Buyer']->expects($this->exactly(1))
+        $this->dependencies['ReceptorEmailClientInterface']->expects($this->exactly(1))
                 ->method('getEmail')
                 ->with()
-                ->willReturn('joseph@php.com');
+                ->willReturn('joseph@phpcode.com');
 
-        $notification = $this->dependencies['main']->configure($this->dependencies['Transaction']);
+        $notification = $this->dependencies['main']->configure($this->dependencies['ReceptorEmailClientInterface']);
         $notificationReflection = (new \ReflectionClass($notification));
 
         $property = $notificationReflection->getProperty('email');
@@ -51,7 +49,7 @@ class NotifierLibraryTest extends TestCase
 
         $this->assertEquals(
                 $property->getValue($notification),
-                'joseph@php.com',
+                'joseph@phpcode.com',
         );
     }
 

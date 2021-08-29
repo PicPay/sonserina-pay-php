@@ -19,8 +19,14 @@ $transactionConfigurator = new App\Domain\Services\Transaction\TransactionConfig
 $transactionNotifier = new App\Domain\Services\Transaction\TransactionNotifier($notifierService);
 $transactionSaver = new App\Domain\Services\Transaction\TransactionSaver($transactionRepository);
 
+$buyer = new \App\Domain\Entities\Buyer();
+$buyer->setEmail('joseph_buyer@phpcode.com');
+$seller = new \App\Domain\Entities\Seller();
+$seller->setEmail('joseph_seller@phpcode.com');
+
 $transaction = new App\Domain\Entities\Transaction();
-$transaction->setBuyer(new \App\Domain\Entities\Buyer());
+$transaction->setBuyer($buyer);
+$transaction->setSeller($seller);
 $transaction->setSellerTax(10);
 $transaction->setInitialAmount(100);
 

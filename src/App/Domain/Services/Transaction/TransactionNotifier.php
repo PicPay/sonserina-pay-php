@@ -31,9 +31,17 @@ class TransactionNotifier implements TransactionProcessorInterface
      */
     public function process(Transaction $transaction, $complement = null): void
     {
-        $notification = $this->notifier->getClient()->configure($transaction);
+        $receptorsList = [
+            $transaction->getBuyer(),
+            $transaction->getSeller()
+        ];
 
-        $this->notifier->notify($notification);
+        foreach ($receptorsList as $receptor) {
+
+            $notification = $this->notifier->getClient()->configure($receptor);
+
+            $this->notifier->notify($notification);
+        }
     }
 
 }

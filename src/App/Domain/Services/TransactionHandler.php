@@ -10,7 +10,6 @@ use App\Domain\Services\Transaction\TransactionCalculator;
 use App\Domain\Services\Transaction\TransactionConfigurator;
 use App\Domain\Services\Transaction\TransactionSaver;
 use App\Domain\Services\Transaction\TransactionNotifier;
-use Exception;
 
 class TransactionHandler
 {

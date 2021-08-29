@@ -28,10 +28,13 @@ class TransactionCalculatorTest extends TestCase
         ];
     }
 
-    public function testProcessIndexes(): void
+    public function testProcess(): void
     {
         $sellerTax = 10.0;
         $initialAmount = 100.0;
+        $totalAmount = 113.14;
+        $totalTax = 13.14;
+        $slytherinPay = 3.14;
 
         $this->dependencies['Transaction']->expects($this->exactly(1))
                 ->method('getSellerTax')
@@ -46,50 +49,29 @@ class TransactionCalculatorTest extends TestCase
         $this->dependencies['TaxCalculator']->expects($this->exactly(1))
                 ->method('calculate')
                 ->with($initialAmount, $sellerTax)
-                ->willReturn(113.14);
+                ->willReturn($totalAmount);
+
+        $this->dependencies['TaxCalculator']->expects($this->exactly(1))
+                ->method('calculateSlytherinPayTax')
+                ->with($initialAmount, $sellerTax, $totalAmount)
+                ->willReturn($slytherinPay);
+
+        $this->dependencies['TaxCalculator']->expects($this->exactly(1))
+                ->method('calculateTotalTax')
+                ->with($slytherinPay, $sellerTax)
+                ->willReturn($totalTax);
 
         $received = $this->dependencies['main']->process($this->dependencies['Transaction']);
 
         $this->assertTrue(isset($received['sellerTax']));
         $this->assertTrue(isset($received['totalValueWithTax']));
         $this->assertTrue(isset($received['totalTax']));
-        $this->assertTrue(isset($received['sonserinaPay']));
-    }
+        $this->assertTrue(isset($received['slytherinPay']));
 
-    /**
-     * @dataProvider taxDataProvider
-     */
-    public function testProcessAbs($totalValueWithTax, $totalTaxExpected): void
-    {
-        $sellerTax = 10.0;
-        $initialAmount = 100.0;
-
-        $this->dependencies['Transaction']->expects($this->exactly(1))
-                ->method('getSellerTax')
-                ->with()
-                ->willReturn($sellerTax);
-
-        $this->dependencies['Transaction']->expects($this->exactly(1))
-                ->method('getInitialAmount')
-                ->with()
-                ->willReturn($initialAmount);
-
-        $this->dependencies['TaxCalculator']->expects($this->exactly(1))
-                ->method('calculate')
-                ->with($initialAmount, $sellerTax)
-                ->willReturn($totalValueWithTax);
-
-        $received = $this->dependencies['main']->process($this->dependencies['Transaction']);
-
-        $this->assertEquals($totalTaxExpected, $received['totalTax']);
-    }
-
-    public function taxDataProvider(): array
-    {
-        return [
-            'when sonserine tax is negative' => [120.0, 20.0],
-            'when sonserine tax is positive' => [109.0, 11.0],
-        ];
+        $this->assertEquals($received['sellerTax'], $sellerTax);
+        $this->assertEquals($received['totalValueWithTax'], $totalAmount);
+        $this->assertEquals($received['totalTax'], $totalTax);
+        $this->assertEquals($received['slytherinPay'], $slytherinPay);
     }
 
 }
