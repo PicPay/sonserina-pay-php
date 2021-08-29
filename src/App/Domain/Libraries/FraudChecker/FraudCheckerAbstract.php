@@ -12,11 +12,11 @@ abstract class FraudCheckerAbstract
         self::AUTHORIZED_MESSAGE
     ];
     
-    private bool $status;
+    protected bool $status;
 
     public function isAuthorized(): bool
     {
-        return ($this->getStatus() == true);
+        return ($this->getStatus() === true);
     }
 
     public function notify(string $message, int $code): void

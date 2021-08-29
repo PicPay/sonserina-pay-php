@@ -74,7 +74,9 @@ class TransactionHandler
             $print = ['status' => false, 'message' => $exc->getMessage()];
         }
 
-        //$this->print($print);
+        if (isset($_GET['print'])) {
+            $this->print($print);
+        }
 
         return $transaction;
     }
@@ -82,7 +84,7 @@ class TransactionHandler
     private function print($data, bool $print = false): void
     {
         echo '<pre>';
-        ($print) ? print_r($data) : var_dump($data);
+        ($print !== false) ? print_r($data) : var_dump($data);
         echo '</pre>';
     }
 

@@ -7,7 +7,7 @@ namespace App\Domain\Libraries\FraudChecker;
 class FraudCheckerContainer
 {
 
-    private $servicesConsulting = [
+    private array $servicesConsulting = [
         \App\Domain\Libraries\FraudChecker\Vendor\API::class,
         \App\Domain\Libraries\FraudChecker\Vendor\SDK::class
     ];

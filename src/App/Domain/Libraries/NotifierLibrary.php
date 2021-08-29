@@ -11,20 +11,20 @@ use App\Domain\Entities\Transaction;
 class NotifierLibrary implements NotifierClientInterface
 {
 
-    private Notification $notifier;
+    private Notification $notification;
 
     public function configure(Transaction $transaction): Notification
     {
-        $this->notifier = new Notification();
-        $this->notifier->setEmail($transaction->getBuyer()->getEmail());
-        $this->notifier->setMessage('Transaction performed successfully');
+        $this->notification = new Notification();
+        $this->notification->setEmail($transaction->getBuyer()->getEmail());
+        $this->notification->setMessage('Transaction performed successfully');
 
-        return $this->geNotifier();
+        return $this->getNotification();
     }
 
-    public function geNotifier(): Notification
+    public function getNotification(): Notification
     {
-        return $this->notifier;
+        return $this->notification;
     }
 
     public function notify(Notification $notification): void

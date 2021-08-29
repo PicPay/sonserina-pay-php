@@ -35,7 +35,7 @@ class TransactionConfiguratorTest extends TestCase
             'sonserinaPay' => 5.0,
             'totalValueWithTax' => 20.0
         ];
-        
+
         $this->dependencies['Transaction']->expects($this->exactly(1))
                 ->method('setCreatedDate');
         $this->dependencies['Transaction']->expects($this->exactly(1))
