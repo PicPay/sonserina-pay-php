@@ -5,82 +5,99 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Repositories\TransactionRepositoryInterface;
-use DateTime;
-use Exception;
+use App\Domain\Services\Transaction\TransactionChecker;
+use App\Domain\Services\Transaction\TransactionCalculator;
+use App\Domain\Services\Transaction\TransactionConfigurator;
+use App\Domain\Services\Transaction\TransactionSaver;
+use App\Domain\Services\Transaction\TransactionNotifier;
 
 class TransactionHandler
 {
-    /**
-     * @var TransactionRepositoryInterface
-     */
-    private TransactionRepositoryInterface $repository;
 
     /**
-     * @var TaxCalculator
+     * @var TransactionChecker
      */
-    private TaxCalculator $taxCalculator;
+    private TransactionChecker $checker;
 
     /**
-     * @var FraudChecker
+     * @var TransactionCalculator
      */
-    private FraudChecker $fraudChecker;
+    private TransactionCalculator $calculator;
 
     /**
-     * @var Notifier
+     * @var TransactionConfigurator
      */
-    private Notifier $notifier;
+    private TransactionConfigurator $configurator;
 
+    /**
+     * @var TransactionSaver
+     */
+    private TransactionSaver $saver;
+
+    /**
+     * @var TransactionNotifier
+     */
+    private TransactionNotifier $notifier;
+
+    /**
+     * @param TransactionChecker $checker
+     * @param TransactionCalculator $calculator
+     * @param TransactionConfigurator $configurator
+     * @param TransactionSaver $saver
+     * @param TransactionNotifier $notifier
+     */
     public function __construct(
-        TransactionRepositoryInterface $repository,
-        TaxCalculator $taxCalculator,
-        FraudChecker $fraudChecker,
-        Notifier $notifier
+            TransactionChecker $checker,
+            TransactionCalculator $calculator,
+            TransactionConfigurator $configurator,
+            TransactionSaver $saver,
+            TransactionNotifier $notifier
     )
     {
-        $this->repository = $repository;
-        $this->taxCalculator = $taxCalculator;
-        $this->fraudChecker = $fraudChecker;
+        $this->checker = $checker;
+        $this->calculator = $calculator;
+        $this->configurator = $configurator;
+        $this->saver = $saver;
         $this->notifier = $notifier;
     }
 
     /**
-     * @throws Exception
+     * @param Transaction $transaction
+     * @return Transaction
      */
     public function create(Transaction $transaction): Transaction
     {
-        /**
-         * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
-         * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
-         * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
-         */
-        if (!$this->fraudChecker->check($transaction)) {
-            throw new Exception("Deu erro aqui.");
+        try {
+            $this->checker->process($transaction);
+
+            $configuration = $this->calculator->process($transaction);
+            $this->configurator->process($transaction, $configuration);
+
+            $this->saver->process($transaction);
+            $this->notifier->process($transaction);
+
+            $print = array_merge($configuration, ['status' => true, 'message' => 'Okay']);
+        } catch (\Exception $exc) {
+            $print = ['status' => false, 'message' => $exc->getMessage()];
         }
 
-        /**
-         * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay, pra saber o valor total da taxa tem
-         * que calcular inicialAmount + sellerTaxa - valorTotalWithTax = taxaSonserinaPay
-         * pra saber o total de taxas tem que somar a taxa do sonserinapay com a taxa do lojista
-         * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
-         */
-        $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
+        if (isset($_GET['print'])) {
+            $this->print($print);
+        }
 
-        /**
-         * Draco: Salva a data de criação da transação
-         */
-        $transaction->setCreatedDate(new DateTime());
-
-        /**
-         * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
-         * é culpa do Crabbe que não fez a classe de notificação direito
-         */
-//        $this->notifier->notify($transaction);
-
-        /**
-         * Crabbe: Aqui salva a transação
-         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
-         */
-        return $this->repository->save($transaction);
+        return $transaction;
     }
+
+    /**
+     * @param type $data
+     * @param bool $print
+     * @return void
+     */
+    private function print($data = null, bool $print = false): void
+    {
+        echo '<pre>';
+        ($print !== false) ? print_r($data) : var_dump($data);
+        echo '</pre>';
+    }
+
 }

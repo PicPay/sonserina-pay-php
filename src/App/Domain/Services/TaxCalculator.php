@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Services;
 
-use App\Domain\Clients\TaxManagerClientInterface;
+use App\Domain\Contracts\TaxManagerClientInterface;
 
 class TaxCalculator
 {
+
     private const DEFAULT_INCREMENT_VALUE = 3.14;
 
     /**
@@ -46,4 +47,27 @@ class TaxCalculator
     {
         return $amount * $this->getRealTaxValue($tax);
     }
+
+    /**
+     * @param float $initialAmount
+     * @param float $sellerTax
+     * @param float $totalValueWithTax
+     * @return float
+     */
+    public function calculateSlytherinPayTax(float $initialAmount, float $sellerTax, float $totalValueWithTax): float
+    {
+        return abs($initialAmount + $sellerTax - $totalValueWithTax);
+    }
+
+    /**
+     * 
+     * @param float $slytherinPayTax
+     * @param float $sellerTax
+     * @return float
+     */
+    public function calculateTotalTax(float $slytherinPayTax, float $sellerTax): float
+    {
+        return $slytherinPayTax + $sellerTax;
+    }
+
 }

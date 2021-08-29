@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Clients;
+namespace App\Domain\Contracts;
 
 /**
  * Interface TaxManagerClientInterface
- * @package App\Domain\Clients
+ * @package App\Domain\Contracts
  */
 interface TaxManagerClientInterface
 {
+
     /**
      * @param float $amount
      * @return float

@@ -2,14 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Entities;
+namespace App\Domain\Traits;
 
-use App\Domain\Traits\Emailer;
-
-class Notification
+trait Emailer
 {
-
-    use Emailer;
 
     /**
      * @var string
@@ -17,24 +13,11 @@ class Notification
     private string $email;
 
     /**
-     * @var string
-     */
-    private string $message;
-
-    /**
      * @param string $email
      */
     public function setEmail(string $email): void
     {
         $this->email = $email;
-    }
-
-    /**
-     * @param string $message
-     */
-    public function setMessage(string $message): void
-    {
-        $this->message = $message;
     }
 
     /**
