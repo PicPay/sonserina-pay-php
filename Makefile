@@ -6,5 +6,5 @@ bash:
 	@docker-compose exec app bash
 
 test:
-	@docker-compose exec -T app php ./vendor/bin/phpunit --testdox
+	@docker-compose exec -T app php ./vendor/bin/phpunit --coverage-text
 
