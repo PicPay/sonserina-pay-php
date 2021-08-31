@@ -3,3 +3,4 @@ vendor/
 .phpunit*
 .idea*
 ./tests/reports/*
+secrets-token-access-git
