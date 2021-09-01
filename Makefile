@@ -8,3 +8,6 @@ bash:
 test:
 	@docker-compose exec -T app php ./vendor/bin/phpunit --coverage-text
 
+infection:
+	@docker-compose exec -T app composer run-script infection
+
