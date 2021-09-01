@@ -1,0 +1,11 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./
+    container_name: slytherin-pay
+    ports:
+      - 8089:80
+    restart: always
+    volumes:
+      - ./:/app
