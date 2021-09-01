@@ -6,14 +6,14 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
 use App\Domain\Factorys\FraudCheckers\FraudCheckerFactory;
+use Exception;
 
 class FraudChecker
 {
     private $fraudCheckerIntegration;
-    private $sequenceClient = [1, 2];
 
-    public function check(Transaction $transaction, array $sequenceClient): bool
-    {
+    public function check(Transaction $transaction, array $sequenceClient = [1, 2]): bool
+    { 
         return $this->checkClientConnect();
     }
 
@@ -25,13 +25,28 @@ class FraudChecker
         return $this->getFraudCheckerConnect();
     }
 
+    /**
+     * @throws Exception
+     */
     private function getFraudChecker($client)
     {
-        $this->fraudCheckerIntegration = FraudCheckerFactory::getFraudCheckerIntegration($client);
+        try {
+            $this->fraudCheckerIntegration = FraudCheckerFactory::getFraudCheckerIntegration($client);
+        } catch (\Throwable $th) {
+            throw new Exception("Failed to create client FraudChecker");
+        }
     }
 
-    private function getFraudCheckerConnect()
+    /**
+     * @throws Exception
+     */
+    private function getFraudCheckerConnect():bool
     {
-        $this->fraudCheckerIntegration->connect();
+        try {
+            $connectSucces = $this->fraudCheckerIntegration->connect(true);
+            return $connectSucces;
+        } catch (\Throwable $th) {
+            throw new Exception("Connection failure");
+        }
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Factorys\FraudCheckers;
 
-use App\Domain\Infra\FraudCheckers\FraudCheckerOneAPI;
-use App\Domain\Infra\FraudCheckers\FraudCheckerTwoSDK;
-use App\Domain\Infra\Integrations\FraudCheckerIntegration;
+use App\Infra\FraudCheckers\FraudCheckerOneAPI;
+use App\Infra\FraudCheckers\FraudCheckerTwoSDK;
+use App\Infra\Integrations\FraudCheckerIntegration;
 
 class FraudCheckerFactory
 {

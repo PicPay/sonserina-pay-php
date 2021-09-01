@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Infra\FraudCheckers;
+namespace App\Infra\FraudCheckers;
 
 use App\Domain\Clients\FraudCheckerClientInterface;
 
 class FraudCheckerTwoSDK implements FraudCheckerClientInterface
 {
-    public function connect(bool $return):bool
+    public function connect(bool $params):bool
     {
-        return $return;
+        return $params;
     }
 
     public function check(object $transaction):bool
