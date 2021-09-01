@@ -3,6 +3,7 @@ name: PHP Composer
 on:
   push:
     branches: [ main ]
+    branches: [ feature/github-action ]
   pull_request:
     branches: [ main ]
 
