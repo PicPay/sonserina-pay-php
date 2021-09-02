@@ -9,17 +9,20 @@ use App\Domain\Entities\Transaction;
 
 class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
 {
+    /**
+     * @param bool $params
+     * @return bool
+    */
     public function connect(bool $params):bool
     {
         return $params;
     }
 
-    public function check(Transaction $transaction):bool
-    {
-        return true; 
-    }
-
-    public function isAuthorized(): bool
+    /**
+     * @param Transaction $transaction
+     * @return bool
+    */
+    public function isAuthorized(Transaction $transaction): bool
     {
         return true;
     }
