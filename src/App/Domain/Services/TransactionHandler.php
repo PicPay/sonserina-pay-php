@@ -31,6 +31,14 @@ class TransactionHandler
      */
     private Notifier $notifier;
 
+    /**
+     * @var array 
+     */
+    protected const SIMULATE_CONNECT = [
+        0 => ['connect' => true], 
+        1 => ['connect' => true]
+    ];
+
     public function __construct(
         TransactionRepositoryInterface $repository,
         TaxCalculator $taxCalculator,
@@ -47,14 +55,17 @@ class TransactionHandler
     /**
      * @throws Exception
      */
-    public function create(Transaction $transaction): Transaction
+    public function create(Transaction $transaction, bool $orderReverse, array $simulateConnect = []): Transaction
     {
+        if (empty($simulateConnect)) {
+            $simulateConnect = self::SIMULATE_CONNECT;
+        }
         /**
          * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
          * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
          */
-        if (!$this->fraudChecker->check($transaction)) {
+        if (!$this->fraudChecker->check($transaction, $orderReverse, $simulateConnect)) {
             throw new Exception("Deu erro aqui.");
         }
 

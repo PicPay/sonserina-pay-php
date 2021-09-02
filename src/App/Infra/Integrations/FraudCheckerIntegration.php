@@ -84,15 +84,19 @@ class FraudCheckerIntegration
     private function verifyAuthorized(Transaction $transaction): bool
     {
         try {
-            return $this->getCheck($transaction);
+            return $this->getAuthorized($transaction);
         } catch (\Throwable $th) {
             $th = self::AUTHORIZED_FAILURE_MESSAGE;
             throw new Exception($th);
         }
     }
 
-    private function getCheck(Transaction $transaction): bool
+    /**
+     * @param Transaction $transaction
+     * @return bool
+     */
+    private function getAuthorized(Transaction $transaction): bool
     {
-        return $this->checker->check($transaction);
+        return $this->checker->isAuthorized($transaction);
     }
 }

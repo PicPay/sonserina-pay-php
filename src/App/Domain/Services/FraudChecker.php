@@ -11,31 +11,31 @@ use Exception;
 
 class FraudChecker
 {
-    private $fraudCheckerIntegration;
-
-    public function check(Transaction $transaction, array $sequenceClient = [1, 2]): bool
+    public function check(Transaction $transaction, bool $orderReverse, array $simulateConnect): bool
     { 
-        $this->fraudCheckerIntegration = $this->getClientFraudChecker();
-        $connect = $this->fraudCheckerIntegration->verifyConnect(true);
         
-        if (!$connect) {
-            return false;
-        }
-
-        return $this->fraudCheckerIntegration->isAuthorized($transaction);
-    }
-
-    /**
-     * @return FraudCheckerIntegration
-     * @throws Exception
-     */
-    private function getClientFraudChecker(): FraudCheckerIntegration
-    {
         try {
-            $client = FraudCheckerFactory::getFraudCheckerOne();
-            return FraudCheckerFactory::getFraudCheckerIntegration($client);
+            $fraudCheckers = FraudCheckerFactory::getFraudCheckers($orderReverse);
+            
+            foreach ($fraudCheckers as $key => $checker) {
+                $connectResultSimulate = $simulateConnect[$key]['connect'];
+                
+                $connect = $checker->verifyConnect($connectResultSimulate);
+            
+                if (!$connect) {
+                    continue;
+                }
+    
+                $authorized = $checker->isAuthorized($transaction);
+    
+                if (!$authorized) {
+                    continue;
+                }
+    
+                return true;
+            }
         } catch (\Throwable $th) {
-            throw new Exception("Failed to create client FraudChecker");
+            throw new Exception($th);
         }
     }
 }
