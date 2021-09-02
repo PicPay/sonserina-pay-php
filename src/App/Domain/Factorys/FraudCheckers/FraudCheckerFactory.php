@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Factorys\FraudCheckers;
 
-use App\Infra\Integrations\FraudCheckerIntegration;
+use App\Integrations\FraudCheckerIntegration;
 use Exception;
+
 class FraudCheckerFactory
 {
      
