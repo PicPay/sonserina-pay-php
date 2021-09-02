@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace App\Infra\FraudCheckers;
 
-use App\Domain\Clients\FraudCheckerClientInterface;
+use App\Domain\Clients\FraudCheckerClientAuthorizedInterface;
+use App\Domain\Entities\Transaction;
 
-class FraudCheckerTwoSDK implements FraudCheckerClientInterface
+class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
 {
     public function connect(bool $params):bool
     {
         return $params;
     }
 
-    public function check(object $transaction):bool
+    public function check(Transaction $transaction):bool
     {
         return true; 
+    }
+
+    public function isAuthorized(): bool
+    {
+        return true;
     }
 }
