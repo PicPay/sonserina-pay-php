@@ -6,7 +6,6 @@ namespace Unit\Domain\Services;
 
 use App\Domain\Services\FraudChecker;
 use App\Domain\Entities\Transaction;
-use App\Domain\Factorys\FraudCheckers\FraudCheckerFactory;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -24,8 +23,14 @@ class FraudCheckerTest extends TestCase
 
     public function testCheckSuccess()
     {
+        $simulateConnect = [
+            0 => ['connect' => true], 
+            1 => ['connect' => true]
+        ];
+        $orderReverse = false;
+
         $transaction = $this->createMock(Transaction::class);
-        $result = $this->fraudChecker->check($transaction);
+        $result = $this->fraudChecker->check($transaction, $orderReverse, $simulateConnect);
         $expected = true;
 
         $this->assertEquals($result, $expected);
