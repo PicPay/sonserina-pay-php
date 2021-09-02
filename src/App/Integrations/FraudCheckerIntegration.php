@@ -10,8 +10,6 @@ use Exception;
 
 class FraudCheckerIntegration
 {
-    protected const NOT_AUTHORIZED_MESSAGE = 'Não está autorizado';
-    protected const AUTHORIZED_MESSAGE = 'Autorizado';
     protected const CONNECTION_FAILURE_MESSAGE = 'Falha de Conexão';
     protected const AUTHORIZED_FAILURE_MESSAGE = 'Falha no processo de Autorização';
 
@@ -46,42 +44,12 @@ class FraudCheckerIntegration
         return $this->checker->connect($params);
     }
 
-    /**
-     * @param Transaction $transaction
-     * @return bool
-     */
-    public function isAuthorized(Transaction $transaction): bool
-    {
-        $authorizedMessage = $this->authorizedMessage($transaction);
-
-        if ($authorizedMessage == self::NOT_AUTHORIZED_MESSAGE) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @return string
-     */
-    private function authorizedMessage(Transaction $transaction): string
-    {
-        $response = $this->verifyAuthorized($transaction);
-
-        if (!$response) {
-            return self::NOT_AUTHORIZED_MESSAGE;
-        }
-
-        return self::AUTHORIZED_MESSAGE;
-    }
-
      /**
      * @param Transaction $transaction
      * @return bool
      * @throws Exception
      */
-    private function verifyAuthorized(Transaction $transaction): bool
+    public function verifyAuthorized(Transaction $transaction): bool
     {
         try {
             return $this->getAuthorized($transaction);

@@ -9,6 +9,9 @@ use App\Domain\Entities\Transaction;
 
 class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
 {
+    protected const NOT_AUTHORIZED_MESSAGE = 'Não está autorizado';
+    protected const AUTHORIZED_MESSAGE = 'Autorizado';
+
     /**
      * @param bool $params
      * @return bool
@@ -21,9 +24,28 @@ class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
     /**
      * @param Transaction $transaction
      * @return bool
-    */
-    public function isAuthorized(Transaction $transaction): bool
+     */
+    public function isAuthorized(Transaction $transaction,  bool $simulateAuthorized = true): bool
     {
+        $authorizedMessage = $this->authorizedMessage($transaction);
+
+        if ($authorizedMessage == self::NOT_AUTHORIZED_MESSAGE) {
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @return string
+    */
+    private function authorizedMessage(Transaction $transaction, bool $simulateAuthorized = true): string
+    {
+        if (!$simulateAuthorized) {
+            return self::NOT_AUTHORIZED_MESSAGE;
+        }
+
+        return self::AUTHORIZED_MESSAGE;
     }
 }

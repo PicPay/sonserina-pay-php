@@ -24,7 +24,7 @@ class FraudChecker
                     continue;
                 }
     
-                $authorized = $checker->isAuthorized($transaction);
+                $authorized = $checker->verifyAuthorized($transaction);
     
                 if (!$authorized) {
                     continue;
