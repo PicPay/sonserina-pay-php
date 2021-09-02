@@ -6,7 +6,6 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
 use App\Domain\Factorys\FraudCheckers\FraudCheckerFactory;
-use App\Infra\Integrations\FraudCheckerIntegration;
 use Exception;
 
 class FraudChecker
@@ -19,7 +18,6 @@ class FraudChecker
             
             foreach ($fraudCheckers as $key => $checker) {
                 $connectResultSimulate = $simulateConnect[$key]['connect'];
-                
                 $connect = $checker->verifyConnect($connectResultSimulate);
             
                 if (!$connect) {
