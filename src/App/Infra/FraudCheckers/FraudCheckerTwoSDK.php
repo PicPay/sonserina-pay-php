@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infra\FraudCheckers;
 
-use App\Domain\Clients\FraudCheckerClientAuthorizedInterface;
+use App\Domain\Contracts\FraudCheckerClientAuthorizedInterface;
 use App\Domain\Entities\Transaction;
 use Exception;
 

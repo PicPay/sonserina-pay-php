@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Integrations;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Clients\FraudCheckerClientAuthorizedInterface;
+use App\Domain\Contracts\FraudCheckerClientAuthorizedInterface;
 use Exception;
 
 class FraudCheckerIntegration

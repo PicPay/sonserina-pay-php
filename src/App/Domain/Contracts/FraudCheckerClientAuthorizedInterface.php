@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Clients;
+namespace App\Domain\Contracts;
 
-use App\Domain\Clients\FraudCheckerClientInterface;
+use App\Domain\Contracts\FraudCheckerClientInterface;
 use App\Domain\Entities\Transaction;
 
 interface FraudCheckerClientAuthorizedInterface extends FraudCheckerClientInterface

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Unit\Domain\Services;
 
-use App\Domain\Clients\TaxManagerClientInterface;
+use App\Domain\Contracts\TaxManagerClientInterface;
 use App\Domain\Services\TaxCalculator;
 use PHPUnit\Framework\TestCase;
 

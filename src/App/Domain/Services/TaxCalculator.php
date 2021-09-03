@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Services;
 
-use App\Domain\Clients\TaxManagerClientInterface;
+use App\Domain\Contracts\TaxManagerClientInterface;
 
 class TaxCalculator
 {
