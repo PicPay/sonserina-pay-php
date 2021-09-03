@@ -32,7 +32,7 @@ class FraudCheckerOneAPI implements FraudCheckerClientAuthorizedInterface
      * @param Transaction $transaction
      * @return bool
      */
-    public function isAuthorized(Transaction $transaction,  array $simulateAuthorized): bool
+    public function isAuthorized(Transaction $transaction, array $simulateAuthorized): bool
     {
         $connect = $this->connect($simulateAuthorized['connect']);
         
@@ -61,5 +61,4 @@ class FraudCheckerOneAPI implements FraudCheckerClientAuthorizedInterface
 
         return self::AUTHORIZED_MESSAGE;
     }
-
 }

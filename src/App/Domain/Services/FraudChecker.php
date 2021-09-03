@@ -11,7 +11,7 @@ use Exception;
 class FraudChecker
 {
     public function check(Transaction $transaction, bool $orderReverse, array $simulateAuthorized): bool
-    { 
+    {
         
         try {
             $fraudCheckers = FraudCheckerFactory::getFraudCheckers($orderReverse);

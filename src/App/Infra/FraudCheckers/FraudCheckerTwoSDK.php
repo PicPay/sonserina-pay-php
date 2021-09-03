@@ -31,7 +31,7 @@ class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
      * @param Transaction $transaction
      * @return bool
      */
-    public function isAuthorized(Transaction $transaction,  array $simulateAuthorized): bool
+    public function isAuthorized(Transaction $transaction, array $simulateAuthorized): bool
     {
         $connect = $this->connect($simulateAuthorized['connect']);
         

@@ -32,10 +32,10 @@ class TransactionHandler
     private Notifier $notifier;
 
     /**
-     * @var array 
+     * @var array
      */
     protected const SIMULATE_AUTHORIZED = [
-        0 => ['connect' => true, 'authorized' => true], 
+        0 => ['connect' => true, 'authorized' => true],
         1 => ['connect' => true, 'authorized' => true],
     ];
 
@@ -44,8 +44,8 @@ class TransactionHandler
         TaxCalculator $taxCalculator,
         FraudChecker $fraudChecker,
         Notifier $notifier
-    )
-    {
+    ) {
+    
         $this->repository = $repository;
         $this->taxCalculator = $taxCalculator;
         $this->fraudChecker = $fraudChecker;
