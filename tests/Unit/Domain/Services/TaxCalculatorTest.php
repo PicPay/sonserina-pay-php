@@ -18,7 +18,12 @@ class TaxCalculatorTest extends TestCase
     /**
      * @dataProvider taxDataProvider
      */
-    public function testCalculateFunction(float $clientIncrementReturn, float $amount, float $tax, float $expected, int $countClientCalls): void
+    public function testCalculateFunction(float $clientIncrementReturn, 
+        float $amount, 
+        float $tax, 
+        float $expected, 
+        int $countClientCalls
+    ): void
     {
         /**
          * Fiz testes na minha aplicação, agora ela não tem problemas, passa em todos os testes.

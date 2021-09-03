@@ -20,19 +20,52 @@ class FraudCheckerTest extends TestCase
 
     #./vendor/bin/phpunit tests/Unit/Domain/Services/FraudCheckerTest.php
 
-
-    public function testCheckSuccess()
+    /**
+     * @dataProvider checkSuccesProvider
+     */
+    public function testCheckSuccess($orderReverse, $simulateAuthorized, $expected)
     {
-        $simulateConnect = [
-            0 => ['connect' => true, 'authorized' => true], 
-            1 => ['connect' => true, 'authorized' => true],
-        ];
-        $orderReverse = false;
-
         $transaction = $this->createMock(Transaction::class);
-        $result = $this->fraudChecker->check($transaction, $orderReverse, $simulateConnect);
-        $expected = true;
+        $result = $this->fraudChecker->check($transaction, $orderReverse, $simulateAuthorized);
 
         $this->assertEquals($result, $expected);
+    }
+
+    public function checkSuccesProvider(): array
+    {
+        return [
+           'connect and authorized TRUE, reverse FALSE' => [
+                'orderReverse' => false,
+                'simulateAuthorized' => [
+                    0 => ['connect' => true, 'authorized' => true], 
+                    1 => ['connect' => true, 'authorized' => true], 
+                ],
+                'expected' => true,
+           ],
+           'connect and authorized TRUE, reverse TRUE' => [
+                'orderReverse' => true,
+                'simulateAuthorized' => [
+                    0 => ['connect' => true, 'authorized' => true], 
+                    1 => ['connect' => true, 'authorized' => true], 
+                ],
+                'expected' => true,
+           ],
+           'connect0 FALSE, authorized0 FALSE, connect1 TRUE, authorized1 TRUE, reverse FALSE' => [
+                'orderReverse' => false,
+                'simulateAuthorized' => [
+                    0 => ['connect' => false, 'authorized' => true], 
+                    1 => ['connect' => true, 'authorized' => true], 
+                ],
+                'expected' => true,
+           ],
+           'connect0 FALSE, authorized0 FALSE, connect1 TRUE, authorized1 TRUE, reverse TRUE' => [
+                'orderReverse' => true,
+                'simulateAuthorized' => [
+                    0 => ['connect' => false, 'authorized' => true], 
+                    1 => ['connect' => true, 'authorized' => true], 
+                ],
+                'expected' => true,
+            ],
+        ];
     }
 }

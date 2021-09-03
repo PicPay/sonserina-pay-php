@@ -39,7 +39,7 @@ class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
             return false;
         }
         
-        $authorizedMessage = $this->authorizedMessage($simulateAuthorized['authorized']);
+        $authorizedMessage = $this->authorizedMessage($transaction, $simulateAuthorized['authorized']);
         if ($authorizedMessage == self::NOT_AUTHORIZED_MESSAGE) {
             return false;
         }
