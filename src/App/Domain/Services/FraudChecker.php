@@ -25,6 +25,8 @@ class FraudChecker
     
                 return true;
             }
+
+            return false;
         } catch (\Throwable $th) {
             throw new Exception($th);
         }

@@ -6,27 +6,25 @@ namespace Unit\Domain\Services;
 
 use App\Domain\Services\FraudChecker;
 use App\Domain\Entities\Transaction;
-use Exception;
 use PHPUnit\Framework\TestCase;
 
 class FraudCheckerTest extends TestCase
 {
     private $fraudChecker;
+    private $transaction;
     
     protected function setUp(): void
     {
         $this->fraudChecker = new FraudChecker();
+        $this->transaction = $this->createMock(Transaction::class);
     }
-
-    #./vendor/bin/phpunit tests/Unit/Domain/Services/FraudCheckerTest.php
 
     /**
      * @dataProvider checkSuccesProvider
      */
     public function testCheckSuccess($orderReverse, $simulateAuthorized, $expected)
-    {
-        $transaction = $this->createMock(Transaction::class);
-        $result = $this->fraudChecker->check($transaction, $orderReverse, $simulateAuthorized);
+    {  
+        $result = $this->fraudChecker->check($this->transaction, $orderReverse, $simulateAuthorized);
 
         $this->assertEquals($result, $expected);
     }
@@ -53,7 +51,7 @@ class FraudCheckerTest extends TestCase
            'connect0 FALSE, authorized0 FALSE, connect1 TRUE, authorized1 TRUE, reverse FALSE' => [
                 'orderReverse' => false,
                 'simulateAuthorized' => [
-                    0 => ['connect' => false, 'authorized' => true], 
+                    0 => ['connect' => false, 'authorized' => false], 
                     1 => ['connect' => true, 'authorized' => true], 
                 ],
                 'expected' => true,
@@ -61,11 +59,51 @@ class FraudCheckerTest extends TestCase
            'connect0 FALSE, authorized0 FALSE, connect1 TRUE, authorized1 TRUE, reverse TRUE' => [
                 'orderReverse' => true,
                 'simulateAuthorized' => [
-                    0 => ['connect' => false, 'authorized' => true], 
+                    0 => ['connect' => false, 'authorized' => false], 
                     1 => ['connect' => true, 'authorized' => true], 
                 ],
                 'expected' => true,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider checkFailureProvider
+     */
+    public function testCheckFailure($orderReverse, $simulateAuthorized, $expected)
+    {
+        $result = $this->fraudChecker->check($this->transaction, $orderReverse, $simulateAuthorized);
+
+        $this->assertEquals($result, $expected);
+    }
+
+    public function checkFailureProvider(): array
+    {
+        return [
+           'connect and authorized FALSE, reverse FALSE' => [
+                'orderReverse' => false,
+                'simulateAuthorized' => [
+                    0 => ['connect' => false, 'authorized' => false], 
+                    1 => ['connect' => false, 'authorized' => false], 
+                ],
+                'expected' => false,
+           ],
+           'connect FALSE, authorized TRUE, reverse FALSE' => [
+                'orderReverse' => false,
+                'simulateAuthorized' => [
+                    0 => ['connect' => false, 'authorized' => true], 
+                    1 => ['connect' => false, 'authorized' => true], 
+                ],
+                'expected' => false,
+           ],
+           'connect0 FALSE, authorized0 FALSE, connect1 TRUE, authorized1 TRUE, reverse FALSE' => [
+                'orderReverse' => false,
+                'simulateAuthorized' => [
+                    0 => ['connect' => false, 'authorized' => true], 
+                    1 => ['connect' => true, 'authorized' => false], 
+                ],
+                'expected' => false,
+           ]
         ];
     }
 }
