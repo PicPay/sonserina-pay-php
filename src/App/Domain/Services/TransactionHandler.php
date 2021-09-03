@@ -34,9 +34,9 @@ class TransactionHandler
     /**
      * @var array 
      */
-    protected const SIMULATE_CONNECT = [
-        0 => ['connect' => true], 
-        1 => ['connect' => true]
+    protected const SIMULATE_AUTHORIZED = [
+        0 => ['connect' => true, 'authorized' => true], 
+        1 => ['connect' => true, 'authorized' => true],
     ];
 
     public function __construct(
@@ -55,17 +55,17 @@ class TransactionHandler
     /**
      * @throws Exception
      */
-    public function create(Transaction $transaction, bool $orderReverse, array $simulateConnect = []): Transaction
+    public function create(Transaction $transaction, bool $orderReverse, array $simulateAuthorized = []): Transaction
     {
-        if (empty($simulateConnect)) {
-            $simulateConnect = self::SIMULATE_CONNECT;
+        if (empty($simulateAuthorized)) {
+            $simulateAuthorized = self::SIMULATE_AUTHORIZED;
         }
         /**
          * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
          * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
          * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
          */
-        if (!$this->fraudChecker->check($transaction, $orderReverse, $simulateConnect)) {
+        if (!$this->fraudChecker->check($transaction, $orderReverse, $simulateAuthorized)) {
             throw new Exception("Deu erro aqui.");
         }
 

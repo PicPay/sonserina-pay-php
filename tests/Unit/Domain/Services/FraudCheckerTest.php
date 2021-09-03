@@ -24,8 +24,8 @@ class FraudCheckerTest extends TestCase
     public function testCheckSuccess()
     {
         $simulateConnect = [
-            0 => ['connect' => true], 
-            1 => ['connect' => true]
+            0 => ['connect' => true, 'authorized' => true], 
+            1 => ['connect' => true, 'authorized' => true],
         ];
         $orderReverse = false;
 

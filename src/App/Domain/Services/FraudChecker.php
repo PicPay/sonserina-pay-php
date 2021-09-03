@@ -10,21 +10,14 @@ use Exception;
 
 class FraudChecker
 {
-    public function check(Transaction $transaction, bool $orderReverse, array $simulateConnect): bool
+    public function check(Transaction $transaction, bool $orderReverse, array $simulateAuthorized): bool
     { 
         
         try {
             $fraudCheckers = FraudCheckerFactory::getFraudCheckers($orderReverse);
-            
             foreach ($fraudCheckers as $key => $checker) {
-                $connectResultSimulate = $simulateConnect[$key]['connect'];
-                $connect = $checker->verifyConnect($connectResultSimulate);
-            
-                if (!$connect) {
-                    continue;
-                }
-    
-                $authorized = $checker->verifyAuthorized($transaction);
+                $connectResultSimulate = $simulateAuthorized[$key];
+                $authorized = $checker->verifyAuthorized($transaction, $connectResultSimulate);
     
                 if (!$authorized) {
                     continue;
