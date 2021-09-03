@@ -65,7 +65,7 @@ class TaxCalculator
      * @param float $tax
      * @return float
      */
-    private function calculate(float $amount, float $tax): float
+    public function calculate(float $amount, float $tax): float
     {
         return $amount * $this->getRealTaxValue($tax);
     }
@@ -76,7 +76,7 @@ class TaxCalculator
      * @param float $totalValueWithTax
      * @return float
      */
-    private function calculateSlytherinPayTax(float $initialAmount, float $sellerTax, float $totalValueWithTax): float
+    public function calculateSlytherinPayTax(float $initialAmount, float $sellerTax, float $totalValueWithTax): float
     {
         $slytherinPayTax = abs(($sellerTax + $initialAmount) - $totalValueWithTax);
         
@@ -89,7 +89,7 @@ class TaxCalculator
      * @param float $slytherinPayTax
      * @return float
      */
-    private function calculateTotalTax(float $sellerTax, float $slytherinPayTax): float
+    public function calculateTotalTax(float $sellerTax, float $slytherinPayTax): float
     {
         $totalTax = abs($sellerTax + $slytherinPayTax);
 
