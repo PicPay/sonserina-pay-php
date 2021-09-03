@@ -10,25 +10,28 @@ use PHPUnit\Framework\TestCase;
 
 class FraudCheckerOneAPITest extends TestCase
 {
-    private $fraudChecker;
+    private $fraudCheckerClient;
     private $transaction;
+
+    private const NOT_AUTHORIZED_MESSAGE = 'Não está autorizado';
+    private const AUTHORIZED_MESSAGE = 'Autorizado';
     
     protected function setUp(): void
     {
-        $this->fraudChecker = new FraudCheckerOneAPI();
+        $this->fraudCheckerClient = new FraudCheckerOneAPI();
         $this->transaction = $this->createMock(Transaction::class);
     }
     
     public function testConnectSuccess()
     {
-        $result = $this->fraudChecker->connect(true);
+        $result = $this->fraudCheckerClient->connect(true);
     
         $this->assertEquals($result, true);
     }
     
     public function testConnectFailure()
     {
-        $result = $this->fraudChecker->connect(false);
+        $result = $this->fraudCheckerClient->connect(false);
     
         $this->assertEquals($result, false);
     }
@@ -38,7 +41,7 @@ class FraudCheckerOneAPITest extends TestCase
      */
     public function testIsAuthorizedSuccess($simulateAuthorized, $expected)
     {
-        $result = $this->fraudChecker->isAuthorized($this->transaction, $simulateAuthorized);
+        $result = $this->fraudCheckerClient->isAuthorized($this->transaction, $simulateAuthorized);
 
         $this->assertEquals($result, $expected);
     }
@@ -60,7 +63,7 @@ class FraudCheckerOneAPITest extends TestCase
      */
     public function testIsAuthorizedFailure($simulateAuthorized, $expected)
     {
-        $result = $this->fraudChecker->isAuthorized($this->transaction, $simulateAuthorized);
+        $result = $this->fraudCheckerClient->isAuthorized($this->transaction, $simulateAuthorized);
 
         $this->assertEquals($result, $expected);
     }
@@ -82,5 +85,41 @@ class FraudCheckerOneAPITest extends TestCase
                 'expected' => false,
             ]
         ];
+    }
+
+
+    /**
+     * @dataProvider authorizedMessageProvider
+     */
+    public function testAuthorizedMessage($simulateAuthorized, $expected)
+    {
+        $params = [$this->transaction, $simulateAuthorized];
+        $result = $this->getMethod($this->fraudCheckerClient, 'authorizedMessage', $params);
+
+        $this->assertEquals($result, $expected);
+    }
+
+    public function authorizedMessageProvider(): array
+    {
+        return [
+           'is authorized' => [
+                'simulateAuthorized' => true,
+                'expected' => self::AUTHORIZED_MESSAGE,
+           ],
+           'not authorized' => [
+                'simulateAuthorized' => false,
+                'expected' => self::NOT_AUTHORIZED_MESSAGE,
+           ],
+           
+        ];
+    }
+
+    private function getMethod(object $class, string $method, array $parameters = [])
+    {
+        $classRefletion = (new \ReflectionClass($class));
+        $method = $classRefletion->getMethod($method);
+        $method->setAccessible(true);
+       
+        return $method->invokeArgs($class, $parameters);
     }
 }

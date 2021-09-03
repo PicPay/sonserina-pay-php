@@ -6,6 +6,7 @@ namespace App\Infra\FraudCheckers;
 
 use App\Domain\Clients\FraudCheckerClientAuthorizedInterface;
 use App\Domain\Entities\Transaction;
+use Exception;
 
 class FraudCheckerTwoSDK implements FraudCheckerClientAuthorizedInterface
 {
