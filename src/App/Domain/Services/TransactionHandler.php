@@ -65,26 +65,21 @@ class TransactionHandler
      */
     public function create(Transaction $transaction, bool $orderReverse, array $simulateAuthorized = []): Transaction
     {
-
-        $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
-
-        $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
-        $this->transactionSettings->setup($transaction, $transactionTaxValues);
+        try {
+            $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
+            $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
+            $this->transactionSettings->setup($transaction, $transactionTaxValues);
+            $this->repository->save($transaction);
+            $this->notifier->notify($transaction);
+            
+            return $transaction;
+        } catch (\Throwable $th) {
+            throw $th->getMessage();
+        }
         
 
        
 
-        /**
-         * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
-         * é culpa do Crabbe que não fez a classe de notificação direito
-         */
-//        $this->notifier->notify($transaction);
-
-        /**
-         * Crabbe: Aqui salva a transação
-         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
-         */
-        return $this->repository->save($transaction);
     }
 
     /**
