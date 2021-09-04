@@ -2,55 +2,23 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use \App\Domain\Entities\{Buyer, Seller, Transaction, Notification};
-use \App\Domain\Services\TransactionHandler;
-use \App\Domain\Repositories\TransactionRepository;
-use \App\Domain\Services\Transactions\SettingsTransaction;
-use \App\Domain\Services\Notifications\{GenerateNotification, DispatcherNotification};
-use \App\Domain\Services\{Notifier, FraudChecker, TaxCalculator};
-use \App\Domain\Dale\{TaxManagerClient, NotifierClient};
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-
-$buyer = new Buyer();
-$seller = new Seller();
-$buyer->setEmail('buyer@gmail.com');
-$seller->setEmail('seller@gmail.com');
-
-$transaction = new Transaction();
-$transaction->setBuyer($buyer);
-$transaction->setSeller($seller);
-$transaction->setSellerTax(2);
-$transaction->setInitialAmount(20);
-
-$repository = new TransactionRepository();
-
-$taxManagerClient = new TaxManagerClient();
-$taxCalculator = new TaxCalculator($taxManagerClient);
-
-$notification = new Notification();
-$generateNotification = new GenerateNotification($notification);
-
-$notifierClient = new NotifierClient();
-$notifier = new Notifier($notifierClient);  
-$dispatcherNotify = new DispatcherNotification($notifier, $generateNotification);
-
-
-$fraudChecker = new FraudChecker();
-$settingsTransaction = new SettingsTransaction();
+use \App\Domain\Services\Transactions\TransactionExecutator;
 
 $simulateAuthorized = [
     0 => ['connect' => true, 'authorized' => true],
     1 => ['connect' => true, 'authorized' => true],
 ];
-
 $orderReverse = true;
 
-$transactionHandler = new TransactionHandler(
-    $repository,
-    $taxCalculator,
-    $fraudChecker,
-    $dispatcherNotify,
-    $settingsTransaction
-);
+$executator = new TransactionExecutator();
+$executator->setEmailBuyer('buyer@gmail.com');
+$executator->setEmailSeller('seller@gmail.com');
+$executator->setTransaction(2, 20);
 
-$transactionHandler->create($transaction, $orderReverse, $simulateAuthorized);
+$executator->instantiatesClasses();
+
+$executator->transactionHandlerExecute($orderReverse, $simulateAuthorized);
