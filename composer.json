@@ -17,6 +17,6 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit --coverage-text",
-    "infection": "vendor/bin/infection --min-msi=5 --min-covered-msi=5"
+    "infection": "vendor/bin/infection --min-msi=69.53 --min-covered-msi=69.53"
   }
 }
