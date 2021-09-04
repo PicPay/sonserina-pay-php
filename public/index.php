@@ -2,18 +2,19 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use \App\Domain\Entities\{Buyer, Seller, Transaction};
+use \App\Domain\Entities\{Buyer, Seller, Transaction, Notification};
 use \App\Domain\Services\TransactionHandler;
-use \App\Domain\Repositories\TransactionRepositoryInterface;
+use \App\Domain\Repositories\TransactionRepository;
 use \App\Domain\Services\Transactions\SettingsTransaction;
-use \App\Domain\Services\Notifications\DispatcherNotification;
-use \App\Domain\Services\FraudChecker;
-use \App\Domain\Services\TaxCalculator;
+use \App\Domain\Services\Notifications\{GenerateNotification, DispatcherNotification};
+use \App\Domain\Services\{Notifier, FraudChecker, TaxCalculator};
+use \App\Domain\Dale\{TaxManagerClient, NotifierClient};
+
 
 $buyer = new Buyer();
 $seller = new Seller();
-$buyer->setEmail('wellingtonlogia@gmail.com');
-$seller->setEmail('wellallencar@gmail.com');
+$buyer->setEmail('buyer@gmail.com');
+$seller->setEmail('seller@gmail.com');
 
 $transaction = new Transaction();
 $transaction->setBuyer($buyer);
@@ -21,19 +22,28 @@ $transaction->setSeller($seller);
 $transaction->setSellerTax(2);
 $transaction->setInitialAmount(20);
 
+$repository = new TransactionRepository();
 
-$repository = new TransactionRepositoryInterface();
-$taxCalculator = new TaxCalculator();
+$taxManagerClient = new TaxManagerClient();
+$taxCalculator = new TaxCalculator($taxManagerClient);
+
+$notification = new Notification();
+$generateNotification = new GenerateNotification($notification);
+
+$notifierClient = new NotifierClient();
+$notifier = new Notifier($notifierClient);  
+$dispatcherNotify = new DispatcherNotification($notifier, $generateNotification);
+
+
 $fraudChecker = new FraudChecker();
-$dispatcherNotify = new DispatcherNotification();
-$SettingsTransaction = new SettingsTransaction();
+$settingsTransaction = new SettingsTransaction();
 
 $simulateAuthorized = [
     0 => ['connect' => true, 'authorized' => true],
     1 => ['connect' => true, 'authorized' => true],
 ];
 
-$orderReverse = false;
+$orderReverse = true;
 
 $transactionHandler = new TransactionHandler(
     $repository,
