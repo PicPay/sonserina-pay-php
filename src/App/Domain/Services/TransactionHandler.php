@@ -6,7 +6,8 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
 use App\Domain\Repositories\TransactionRepositoryInterface;
-use App\Domain\Services\Transactions\TransactionSettings;
+use App\Domain\Services\Transactions\SettingsTransaction;
+use App\Domain\Services\Notifications\DispatcherNotification;
 use DateTime;
 use Exception;
 
@@ -28,14 +29,14 @@ class TransactionHandler
     private FraudChecker $fraudChecker;
 
     /**
-     * @var Notifier
+     * @var DispatcherNotification
      */
-    private Notifier $notifier;
+    private DispatcherNotification $dispatcherNotify;
     
     /**
-     * @var TransactionSettings
+     * @var SettingsTransaction
      */
-    private TransactionSettings $transactionSettings;
+    private SettingsTransaction $SettingsTransaction;
 
     /**
      * @var array
@@ -49,15 +50,15 @@ class TransactionHandler
         TransactionRepositoryInterface $repository,
         TaxCalculator $taxCalculator,
         FraudChecker $fraudChecker,
-        Notifier $notifier,
-        TransactionSettings $transactionSettings
+        DispatcherNotification $dispatcherNotify,
+        SettingsTransaction $SettingsTransaction
     ) {
     
         $this->repository = $repository;
         $this->taxCalculator = $taxCalculator;
         $this->fraudChecker = $fraudChecker;
-        $this->notifier = $notifier;
-        $this->transactionSettings = $transactionSettings;
+        $this->dispatcherNotify = $dispatcherNotify;
+        $this->SettingsTransaction = $SettingsTransaction;
     }
 
     /**
@@ -68,18 +69,14 @@ class TransactionHandler
         try {
             $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
             $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
-            $this->transactionSettings->setup($transaction, $transactionTaxValues);
+            $this->SettingsTransaction->setup($transaction, $transactionTaxValues);
             $this->repository->save($transaction);
-            $this->notifier->notify($transaction);
+            $this->dispatcherNotify->sendNotify($transaction);
             
             return $transaction;
         } catch (\Throwable $th) {
             throw $th->getMessage();
         }
-        
-
-       
-
     }
 
     /**
