@@ -44,6 +44,17 @@ class TaxCalculator
      */
     public function transactionTaxValues(Transaction $transaction): array
     {
+        $verify = [
+            $transaction->getInitialAmount(),
+            $transaction->getSellerTax()
+        ];
+
+        foreach ($verify as $propretys) {
+            if (empty($propretys)) {
+                throw new \Exception('incorrect values for transaction');
+            }
+        }
+        
         $initialAmount = $transaction->getInitialAmount();
         $sellerTax = $transaction->getSellerTax();
 
