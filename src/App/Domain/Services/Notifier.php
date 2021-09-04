@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Services;
 
-use App\Domain\Clients\NotifierClientInterface;
+use App\Domain\Contracts\NotifierClientInterface;
 use App\Domain\Entities\Notification;
 
 class Notifier

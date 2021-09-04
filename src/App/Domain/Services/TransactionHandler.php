@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Repositories\TransactionRepositoryInterface;
+use App\Domain\Contracts\TransactionRepositoryInterface;
+use App\Domain\Services\Transactions\SettingsTransaction;
+use App\Domain\Services\Notifications\DispatcherNotification;
 use DateTime;
 use Exception;
 
@@ -27,60 +29,71 @@ class TransactionHandler
     private FraudChecker $fraudChecker;
 
     /**
-     * @var Notifier
+     * @var DispatcherNotification
      */
-    private Notifier $notifier;
+    private DispatcherNotification $dispatcherNotify;
+    
+    /**
+     * @var SettingsTransaction
+     */
+    private SettingsTransaction $settingsTransaction;
+
+    /**
+     * @var array
+     */
+    protected const SIMULATE_AUTHORIZED = [
+        0 => ['connect' => true, 'authorized' => true],
+        1 => ['connect' => true, 'authorized' => true],
+    ];
 
     public function __construct(
         TransactionRepositoryInterface $repository,
         TaxCalculator $taxCalculator,
         FraudChecker $fraudChecker,
-        Notifier $notifier
-    )
-    {
+        DispatcherNotification $dispatcherNotify,
+        SettingsTransaction $settingsTransaction
+    ) {
+    
         $this->repository = $repository;
         $this->taxCalculator = $taxCalculator;
         $this->fraudChecker = $fraudChecker;
-        $this->notifier = $notifier;
+        $this->dispatcherNotify = $dispatcherNotify;
+        $this->settingsTransaction = $settingsTransaction;
     }
 
     /**
      * @throws Exception
      */
-    public function create(Transaction $transaction): Transaction
+    public function create(Transaction $transaction, bool $orderReverse, array $simulateAuthorized = []): Transaction
     {
-        /**
-         * Draco: Aqui valida se pode fazer a transação, a Granger falou que tem uns chamados estranhos dizendo que
-         * o cliente tá conseguindo sacar dinheiro da carteira do lojista, mas com certeza é culpa da empresa
-         * que faz a analise anti fraude, eles são trouxas né? Meu sistema não pode fazer nada pra resolver isso.
-         */
-        if (!$this->fraudChecker->check($transaction)) {
-            throw new Exception("Deu erro aqui.");
+        try {
+            $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
+            $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
+            $this->settingsTransaction->setup($transaction, $transactionTaxValues);
+            $this->repository->save($transaction);
+            $this->dispatcherNotify->sendNotify($transaction);
+            
+            return $transaction;
+        } catch (\Throwable $th) {
+            throw new \Exception('Failure to process Transaction');
         }
+    }
 
-        /**
-         * Goyle: esse trecho de código calcula o valor total com a taxa do sonserinapay, pra saber o valor total da taxa tem
-         * que calcular inicialAmount + sellerTaxa - valorTotalWithTax = taxaSonserinaPay
-         * pra saber o total de taxas tem que somar a taxa do sonserinapay com a taxa do lojista
-         * mas eu não sei pra que isso serve não, só fix o que o Draco me mandou fazer
-         */
-        $totalValueComTaxas = $this->taxCalculator->calculate($transaction->getInitialAmount(), $transaction->getSellerTax());
-
-        /**
-         * Draco: Salva a data de criação da transação
-         */
-        $transaction->setCreatedDate(new DateTime());
-
-        /**
-         * Draco: Era pra notificar o cliente e o lojista né? Mas esse cara tá dando problema, com certeza
-         * é culpa do Crabbe que não fez a classe de notificação direito
-         */
-//        $this->notifier->notify($transaction);
-
-        /**
-         * Crabbe: Aqui salva a transação
-         * Draco: As vezes a gente da erro na hora de salvar ai a gente já mandou notificação pro cliente, mas paciência né?
-         */
-        return $this->repository->save($transaction);
+    /**
+     * @param Transaction $transaction
+     * @param bool $orderReverse
+     * @param array $simulateAuthorized
+     * @return void
+     * @throws \Exception
+     */
+    private function checkProcess(Transaction $transaction, $orderReverse, $simulateAuthorized): void
+    {
+        if (empty($simulateAuthorized)) {
+            $simulateAuthorized = self::SIMULATE_AUTHORIZED;
+        }
+        
+        if (!$this->fraudChecker->check($transaction, $orderReverse, $simulateAuthorized)) {
+            throw new \Exception('Unauthorized transaction');
+        }
     }
 }
