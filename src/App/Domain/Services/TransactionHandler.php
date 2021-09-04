@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
-use App\Domain\Repositories\TransactionRepositoryInterface;
+use App\Domain\Contracts\TransactionRepositoryInterface;
 use App\Domain\Services\Transactions\SettingsTransaction;
 use App\Domain\Services\Notifications\DispatcherNotification;
 use DateTime;
@@ -36,7 +36,7 @@ class TransactionHandler
     /**
      * @var SettingsTransaction
      */
-    private SettingsTransaction $SettingsTransaction;
+    private SettingsTransaction $settingsTransaction;
 
     /**
      * @var array
@@ -93,7 +93,7 @@ class TransactionHandler
         }
         
         if (!$this->fraudChecker->check($transaction, $orderReverse, $simulateAuthorized)) {
-            throw new \Exception('Fraud detected in transaction');
+            throw new \Exception('Unauthorized transaction');
         }
     }
 }
