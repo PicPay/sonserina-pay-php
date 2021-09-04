@@ -112,4 +112,28 @@ class TransactionExecutator
         $transactionHandler->create($this->transaction, $orderReverse, $simulateAuthorized);
 
     }
+
+    /**
+     * @param bool $orderReverse
+     * @param array $simulateAuthorized
+     * @return TransactionHandler
+     */
+    public function getTransactionHandlerExecute(bool $orderReverse, array $simulateAuthorized): TransactionHandler
+    {
+        return  new TransactionHandler(
+            $this->repository,
+            $this->taxCalculator,
+            $this->fraudChecker,
+            $this->dispatcherNotify,
+            $this->settingsTransaction
+        );
+    }
+
+    /**
+     * @return Transaction
+     */
+    public function getTransaction(): Transaction
+    {
+        return $this->transaction;
+    }
 }

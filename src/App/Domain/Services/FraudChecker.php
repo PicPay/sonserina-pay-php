@@ -22,8 +22,11 @@ class FraudChecker
                 if (!$authorized) {
                     continue;
                 }
-    
-                return true;
+                
+                $result = true;
+                $transaction->setStatus($result);
+                
+                return $result;
             }
 
             return false;
