@@ -51,14 +51,14 @@ class TransactionHandler
         TaxCalculator $taxCalculator,
         FraudChecker $fraudChecker,
         DispatcherNotification $dispatcherNotify,
-        SettingsTransaction $SettingsTransaction
+        SettingsTransaction $settingsTransaction
     ) {
     
         $this->repository = $repository;
         $this->taxCalculator = $taxCalculator;
         $this->fraudChecker = $fraudChecker;
         $this->dispatcherNotify = $dispatcherNotify;
-        $this->SettingsTransaction = $SettingsTransaction;
+        $this->settingsTransaction = $settingsTransaction;
     }
 
     /**
@@ -69,7 +69,7 @@ class TransactionHandler
         try {
             $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
             $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
-            $this->SettingsTransaction->setup($transaction, $transactionTaxValues);
+            $this->settingsTransaction->setup($transaction, $transactionTaxValues);
             $this->repository->save($transaction);
             $this->dispatcherNotify->sendNotify($transaction);
             
