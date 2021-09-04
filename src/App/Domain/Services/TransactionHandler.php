@@ -66,13 +66,17 @@ class TransactionHandler
      */
     public function create(Transaction $transaction, bool $orderReverse, array $simulateAuthorized = []): Transaction
     {
-        $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
-        $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
-        $this->settingsTransaction->setup($transaction, $transactionTaxValues);
-        $this->repository->save($transaction);
-        $this->dispatcherNotify->sendNotify($transaction);
-        
-        return $transaction;
+        try {
+            $this->checkProcess($transaction, $orderReverse, $simulateAuthorized);
+            $transactionTaxValues = $this->taxCalculator->transactionTaxValues($transaction);
+            $this->settingsTransaction->setup($transaction, $transactionTaxValues);
+            $this->repository->save($transaction);
+            $this->dispatcherNotify->sendNotify($transaction);
+            
+            return $transaction;
+        } catch (\Throwable $th) {
+            throw new \Exception('Failure to process Transaction');
+        }
     }
 
     /**
