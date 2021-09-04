@@ -6,7 +6,7 @@ namespace App\Domain\Services\Transactions;
 
 use App\Domain\Entities\Transaction;
 
-class TransactionSettings
+class SettingsTransaction
 {
 
     /**
