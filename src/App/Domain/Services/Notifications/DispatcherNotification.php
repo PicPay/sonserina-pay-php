@@ -6,6 +6,7 @@ namespace App\Domain\Services\Notifications;
 
 use App\Domain\Services\Notifier;
 use App\Domain\Entities\Transaction;
+use App\Domain\Services\Notifications\GenerateNotification;
 
 class DispatcherNotification
 {
@@ -18,9 +19,12 @@ class DispatcherNotification
     /**
      * @param Notifier $notifier
      */
-    public function __construct(Notifier $notifier)
-    {
+    public function __construct(
+        Notifier $notifier, 
+        GenerateNotification $generateNotification
+    ) {
         $this->notifier = $notifier;
+        $this->generateNotification = $generateNotification;
     }
 
     /**
@@ -28,17 +32,16 @@ class DispatcherNotification
      */
     public function sendNotify(Transaction $transaction)
     {
-        $receptorsList = [
+        $notified = [
             $transaction->getBuyer(),
             $transaction->getSeller()
         ];
-
-        foreach ($receptorsList as $receptor) {
-
-            $notification = $this->notifier->getClient()->configure($receptor);
-
+       
+        return array_map(function ($client) {
+            $notification = $this->generateNotification->generate($client);
             $this->notifier->notify($notification);
-        }
+        }, $notified);
+
     }
 
 }
