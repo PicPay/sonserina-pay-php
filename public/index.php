@@ -7,6 +7,7 @@ use \App\Domain\Services\Transactions\TransactionExecutator;
 $simulateAuthorized = [
     0 => ['connect' => true, 'authorized' => true],
     1 => ['connect' => true, 'authorized' => true],
+    3 => ['connect' => true, 'authorized' => true],
 ];
 $orderReverse = true;
 
