@@ -5,11 +5,33 @@ declare(strict_types=1);
 namespace App\Domain\Services;
 
 use App\Domain\Entities\Transaction;
+use App\Domain\Factorys\FraudCheckers\FraudCheckerFactory;
+use Exception;
 
 class FraudChecker
 {
-    public function check(Transaction $transaction): bool
+    public function check(Transaction $transaction, bool $orderReverse, array $simulateAuthorized): bool
     {
-        return false;
+        
+        try {
+            $fraudCheckers = FraudCheckerFactory::getFraudCheckers($orderReverse);
+            foreach ($fraudCheckers as $key => $checker) {
+                $connectResultSimulate = $simulateAuthorized[$key];
+                $authorized = $checker->verifyAuthorized($transaction, $connectResultSimulate);
+    
+                if (!$authorized) {
+                    continue;
+                }
+                
+                $result = true;
+                $transaction->setStatus($result);
+                
+                return $result;
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            throw new Exception($th);
+        }
     }
 }

@@ -54,6 +54,11 @@ class Transaction
     private Buyer $buyer;
 
     /**
+     * @var bool
+     */
+    private bool $status;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -195,5 +200,21 @@ class Transaction
     public function setBuyer(Buyer $buyer): void
     {
         $this->buyer = $buyer;
+    }
+
+    /**
+     * @return bool $status
+     */
+    public function getStatus(): bool
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param bool $status
+     */
+    public function setStatus(bool $status): void
+    {
+        $this->status = $status;
     }
 }
